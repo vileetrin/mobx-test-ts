@@ -6,7 +6,7 @@ const ProductList = observer(() => {
     const {productsStore, cartStore} = useStore();
     return (
         <div className={css.container}>
-            <h1>Товари</h1>
+            <h1>Products</h1>
             <ul className={css.list}>
                 {productsStore.products.map((product, index) => (
                     <li key={index} className={css.item}>
