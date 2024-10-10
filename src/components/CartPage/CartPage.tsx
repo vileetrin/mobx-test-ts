@@ -28,7 +28,7 @@ const CartPage = observer(() => {
                             <img src={product.image} alt={product.name} className={css.img} />
                             <h3>{product.name}</h3>
                             <div className={css.amountContainer}>
-                                <p>Количество:</p>
+                                <p>Кількість:</p>
                                 <div className={css.btnContainer}>
                                     <button
                                         onClick={() => cartStore.decreaseQuantity(product.id)}
