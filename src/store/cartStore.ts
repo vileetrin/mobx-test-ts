@@ -4,20 +4,24 @@ import DiscountService from './services/DiscountService';
 import ProductService from './services/ProductService';
 
 class CartStore {
-    cart: ICartItem[] = [];
-    private discountService: DiscountService;
-    private productService: ProductService;
+    private _cart: ICartItem[] = [];
+    private _discountService: DiscountService;
+    private _productService: ProductService;
 
     constructor(discountService: DiscountService, productService: ProductService) {
         makeAutoObservable(this);
-        this.discountService = discountService;
-        this.productService = productService;
+        this._discountService = discountService;
+        this._productService = productService;
+    }
+
+    get cart():Array<ICartItem> {
+        return this._cart;
     }
 
     addToCart(productId: number): void {
         const productInCart = this.cart.find(item => item.id === productId);
         if (!productInCart) {
-            const product = this.productService.getProductById(productId);
+            const product = this._productService.getProductById(productId);
             if (product) {
                 this.cart.push({ ...product, amount: 1 });
             }
@@ -27,7 +31,7 @@ class CartStore {
     }
 
     removeFromCart(productId: number): void {
-        this.cart = this.cart.filter(item => item.id !== productId);
+        this._cart = this._cart.filter(item => item.id !== productId);
     }
 
     increaseQuantity(productId: number): void {
@@ -53,12 +57,12 @@ class CartStore {
     }
 
     get totalPriceWithDiscount(): number {
-        const discount = this.discountService.calculateDiscount(this.totalItems);
+        const discount = this._discountService.calculateDiscount(this.totalItems);
         return this.totalPrice - this.totalPrice * discount;
     }
 
     get discount(): number {
-        return this.discountService.calculateDiscount(this.totalItems);
+        return this._discountService.calculateDiscount(this.totalItems);
     }
 }
 
