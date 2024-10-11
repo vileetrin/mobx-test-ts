@@ -1,17 +1,17 @@
 import { makeAutoObservable } from 'mobx';
 import { ICartItem} from './interfaces';
 import DiscountService from './services/DiscountService';
-import ProductService from './services/ProductService';
+import RootStore from "./rootStore.ts";
 
 class CartStore {
     private _cart: ICartItem[] = [];
     private _discountService: DiscountService;
-    private _productService: ProductService;
+    private _root: RootStore;
 
-    constructor(discountService: DiscountService, productService: ProductService) {
+    constructor(discountService: DiscountService, rootStore: RootStore) {
         makeAutoObservable(this);
         this._discountService = discountService;
-        this._productService = productService;
+        this._root = rootStore;
     }
 
     get cart():Array<ICartItem> {
@@ -21,7 +21,7 @@ class CartStore {
     addToCart(productId: number): void {
         const productInCart = this.cart.find(item => item.id === productId);
         if (!productInCart) {
-            const product = this._productService.getProductById(productId);
+            const product = this._root.productsStore.getProductById(productId);
             if (product) {
                 this.cart.push({ ...product, amount: 1 });
             }

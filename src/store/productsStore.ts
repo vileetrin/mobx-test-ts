@@ -1,16 +1,21 @@
-import { makeAutoObservable } from 'mobx';
-import { IProduct } from './interfaces';
+import {makeAutoObservable} from 'mobx';
+import {IProduct} from './interfaces';
+import {ProductsServerRepo} from "../repo/ProductsServerRepo.ts";
 
 class ProductsStore {
     products: IProduct[] = [];
 
-    constructor(initialProducts: IProduct[]) {
+    constructor() {
         makeAutoObservable(this);
-        this.products = initialProducts;
     }
 
-    getAllProducts(): IProduct[] {
-        return this.products;
+    loadProducts() {
+        // return this.products;
+        ProductsServerRepo.loadProducts().then(res => this.products = res);
+    }
+
+    getAllProducts() {
+        return this.products
     }
 
     getProductById(id: number): IProduct | undefined {
