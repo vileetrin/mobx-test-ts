@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx';
-import {IProduct} from './interfaces';
-import {ProductsServerRepo} from "../repo/ProductsServerRepo.ts";
+import {IProduct} from '../../store/interfaces.ts';
+import {ProductsServerRepo} from "../../infrastructure/repo/ProductsServerRepo.ts";
 
 class ProductsStore {
     products: IProduct[] = [];

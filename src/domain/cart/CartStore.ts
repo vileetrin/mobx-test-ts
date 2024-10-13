@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { ICartItem} from './interfaces';
-import DiscountService from './services/DiscountService';
-import RootStore from "./rootStore.ts";
+import { ICartItem} from '../../store/interfaces.ts';
+import DiscountService from '../discount/DiscountService.ts';
+import RootStore from "../../infrastructure/RootStore.ts";
 
 class CartStore {
     private _cart: ICartItem[] = [];

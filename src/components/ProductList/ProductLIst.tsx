@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import {useStore} from "../../store/storeContext.ts";
+import {useStore} from "../../infrastructure/StoreContext.ts";
 import css from './ProductLIst.module.css';
 import {useEffect} from "react";
 

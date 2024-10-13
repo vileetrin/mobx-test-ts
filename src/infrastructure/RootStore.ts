@@ -1,6 +1,6 @@
-import CartStore from './cartStore';
-import ProductsStore from './productsStore';
-import DiscountService from './services/DiscountService';
+import CartStore from '../domain/cart/CartStore.ts';
+import ProductsStore from '../domain/products/ProductsStore.ts';
+import DiscountService from '../domain/discount/DiscountService.ts';
 
 class RootStore {
     cartStore: CartStore;

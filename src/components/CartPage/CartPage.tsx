@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { useStore } from '../../store/storeContext';
+import { useStore } from '../../infrastructure/StoreContext.ts';
 import css from './CartPage.module.css';
 
 const CartPage = observer(() => {
