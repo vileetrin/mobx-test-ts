@@ -13,7 +13,7 @@ const FirstCart = observer(() => {
             )
             .join('\n');
 
-        alert(`Order details:\n${orderDetails}\nTotal Price: $${cartStore.totalPriceWithDiscount.toFixed(2)}`);
+        alert(`Order details:\n${orderDetails}\nTotal Price: $${cartStore.totalPriceWithDiscount('cart1').toFixed(2)}`);
     };
 
     return (
@@ -56,8 +56,8 @@ const FirstCart = observer(() => {
                     ))}
                 </ul>
             )}
-            <h2>Cart №1 Total Price: ${cartStore.totalPriceWithDiscount.toFixed(2)}</h2>
-            <p>Discount applied: {cartStore.discount * 100}%</p>
+            <h2>Cart №1 Total Price: ${cartStore.totalPriceWithDiscount('cart1').toFixed(2)}</h2>
+            <p>Discount applied: {cartStore.discount('cart1') * 100}%</p>
             <button onClick={handleCheckout} disabled={cartStore.getCart1.length === 0} className={css.button}>
                 Оформити замовлення
             </button>

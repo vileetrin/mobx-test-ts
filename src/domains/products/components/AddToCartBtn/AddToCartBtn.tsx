@@ -1,7 +1,8 @@
 import {useStore} from "../../../../infrastructure/StoreContext.ts";
 import React, {useState} from "react";
 import css from "../ProductList/ProductLIst.module.css";
-import Modal from 'react-modal'
+// @ts-ignore
+import Modal from 'react-modal';
 
 interface AddToCartBtnProps {
     productId: number;

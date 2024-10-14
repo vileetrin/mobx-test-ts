@@ -16,23 +16,22 @@ class CartsStore {
     }
 
     get getMainCart():Array<ICartItem> {
-        // const allProducts: ICartItem[] = [
-        //     ...this._cart1,
-        //     ...this._cart2,
-        //     ...this._cart3
-        // ];
-        // const combinedProducts = allProducts.reduce((acc: ICartItem[], item) =>{
-        //     const existing = acc.find(i => i.id === item.id)
-        //     if(existing){
-        //         existing.amount += 1
-        //     }else{
-        //         combinedProducts.push(existing)
-        //     }
-        //     return acc;
-        //  }
-        // ) ;
-        // return this._mainCart = combinedProducts;
-        return this._mainCart;
+        const allProducts: ICartItem[] = [
+            ...this._cart1,
+            ...this._cart2,
+            ...this._cart3
+        ];
+         const combined: ICartItem[] = allProducts.reduce((acc: ICartItem[], item: ICartItem): ICartItem[] => {
+            const existing:ICartItem | undefined = acc.find((i: { id: number; }) => i.id === item.id)
+            if(existing){
+                existing.amount += item.amount
+            } else {
+                acc.push({...item})
+            }
+            return acc;
+        }, [])
+
+        return this._mainCart = combined;
     }
 
     get getCart1 (): Array<ICartItem> {
@@ -57,7 +56,7 @@ class CartsStore {
         }
     }
 
-    addToCart(productId: number, cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): void {
+    addToCart(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {
         const cart = this._getCartByType(cartType);
         const productInCart: ICartItem | undefined = cart.find(product => product.id === productId);
         if (productInCart) {
@@ -91,25 +90,27 @@ class CartsStore {
         }
     }
 
-    get totalItems(): number {
-        return this._mainCart.reduce((sum, item) => sum + item.amount, 0);
+    totalItems(cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): number {
+        const cart = this._getCartByType(cartType);
+        return cart.reduce((sum, item) => sum + item.amount, 0);
     }
 
-    get totalPrice(): number {
-        return this._mainCart.reduce((sum, item) => sum + item.price * item.amount, 0);
+    totalPrice(cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): number {
+        const cart = this._getCartByType(cartType);
+        return cart.reduce((sum, item) => sum + item.price * item.amount, 0);
     }
 
-    get discount ():number {
-        if (this.totalItems >= 3 && this.totalItems < 10) {
+    discount (cartType: 'main' | 'cart1' | 'cart2' | 'cart3'):number {
+        if (this.totalItems(cartType) >= 3 && this.totalItems(cartType) < 10) {
             return 0.07;
-        } else if (this.totalItems >= 10) {
+        } else if (this.totalItems(cartType) >= 10) {
             return 0.10;
         }
         return 0;
     }
 
-    get totalPriceWithDiscount(): number {
-        return this.totalPrice - this.totalPrice * this.discount;
+    totalPriceWithDiscount(cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): number {
+        return this.totalPrice(cartType) - this.totalPrice(cartType) * this.discount(cartType);
     }
 
 }
