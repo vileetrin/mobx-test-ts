@@ -113,6 +113,19 @@ class CartsStore {
         return this.totalPrice(cartType) - this.totalPrice(cartType) * this.discount(cartType);
     }
 
+    getProductAvailability(productId: number): { cart: string; amount: number }[] {
+        const availability = [];
+        const cart1Item = this.getCart1.find(item => item.id === productId);
+        const cart2Item = this.getCart2.find(item => item.id === productId);
+        const cart3Item = this.getCart3.find(item => item.id === productId);
+
+        if (cart1Item) availability.push({ cart: "Cart №1", amount: cart1Item.amount });
+        if (cart2Item) availability.push({ cart: "Cart №2", amount: cart2Item.amount });
+        if (cart3Item) availability.push({ cart: "Cart №3", amount: cart3Item.amount });
+
+        return availability;
+    }
+
 }
 
 export default CartsStore;

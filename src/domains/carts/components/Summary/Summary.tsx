@@ -11,7 +11,7 @@ const Summary = () => {
             <li className={css.listItem}>
                 <div>
                 <p>Name: {item.name}</p>
-                <p>Price: {item.price}</p>
+                <p>Price: {item.price}$</p>
                 <p>Amount: {item.amount}</p>
                 </div>
                 <img src={item.image} alt={item.name} className={css.img}/>

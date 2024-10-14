@@ -12,9 +12,6 @@ class RootStore {
 
         this.productsStore = new ProductsStore();
         this.cartStore = new CartsStore(this);
-        // this.firstCartStore = new MainCartStore(this);
-        // this.secondCartStore = new MainCartStore(this);
-        // this.thirdCartStore = new MainCartStore(this);
     }
 }
 

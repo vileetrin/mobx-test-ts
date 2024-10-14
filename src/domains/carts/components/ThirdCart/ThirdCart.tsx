@@ -22,45 +22,48 @@ const ThirdCart = observer(() => {
             {cartStore.getCart3.length === 0 ? (
                 <p>Your cart is empty.</p>
             ) : (
-                <ul className={css.list}>
-                    {cartStore.getCart3.map((product) => (
-                        <li key={product.id} className={css.item}>
-                            <img src={product.image} alt={product.name} className={css.img}/>
-                            <h3>{product.name}</h3>
-                            <div className={css.amountContainer}>
-                                <p>Кількість:</p>
-                                <div className={css.btnContainer}>
-                                    <button
-                                        onClick={() => cartStore.decreaseQuantity(product.id, 'cart3')}
-                                        className={css.btn}
-                                    >
-                                        -
-                                    </button>
-                                    <p>{product.amount}</p>
-                                    <button
-                                        onClick={() => cartStore.increaseQuantity(product.id, 'cart3')}
-                                        className={css.btn}
-                                    >
-                                        +
-                                    </button>
+                <>
+                    <ul className={css.list}>
+                        {cartStore.getCart3.map((product) => (
+                            <li key={product.id} className={css.item}>
+                                <img src={product.image} alt={product.name} className={css.img}/>
+                                <h3>{product.name}</h3>
+                                <div className={css.amountContainer}>
+                                    <p>Кількість:</p>
+                                    <div className={css.btnContainer}>
+                                        <button
+                                            onClick={() => cartStore.decreaseQuantity(product.id, 'cart3')}
+                                            className={css.btn}
+                                        >
+                                            -
+                                        </button>
+                                        <p>{product.amount}</p>
+                                        <button
+                                            onClick={() => cartStore.increaseQuantity(product.id, 'cart3')}
+                                            className={css.btn}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <p>Price: {product.price}$</p>
-                            <button
-                                onClick={() => cartStore.removeFromCart(product.id, 'cart3')}
-                                className={css.button}
-                            >
-                                Видалити з кошика
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+                                <p>Price: {product.price}$</p>
+                                <button
+                                    onClick={() => cartStore.removeFromCart(product.id, 'cart3')}
+                                    className={css.button}
+                                >
+                                    Видалити з кошика
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <h2>Cart №3 Total Price: ${cartStore.totalPriceWithDiscount('cart3').toFixed(2)}</h2>
+                    <p>Discount applied: {cartStore.discount('cart3') * 100}%</p>
+                    <button onClick={handleCheckout} className={css.button}>
+                        Оформити замовлення
+                    </button>
+                </>
             )}
-            <h2>Cart №3 Total Price: ${cartStore.totalPriceWithDiscount('cart3').toFixed(2)}</h2>
-            <p>Discount applied: {cartStore.discount('cart3') * 100}%</p>
-            <button onClick={handleCheckout} disabled={cartStore.getCart3.length === 0} className={css.button}>
-                Оформити замовлення
-            </button>
         </div>
     );
 });
