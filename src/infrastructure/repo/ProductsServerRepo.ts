@@ -1,4 +1,4 @@
-import {IProduct} from "../store/interfaces.ts";
+import {IProduct} from "../../domains/products/Product.ts";
 
 export class ProductsServerRepo {
 

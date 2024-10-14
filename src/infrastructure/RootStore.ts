@@ -1,16 +1,20 @@
-import CartStore from '../domain/cart/CartStore.ts';
-import ProductsStore from '../domain/products/ProductsStore.ts';
-import DiscountService from '../domain/discount/DiscountService.ts';
+import CartsStore from '../domains/carts/stores/CartsStore.ts';
+import ProductsStore from '../domains/products/ProductsStore.ts';
 
 class RootStore {
-    cartStore: CartStore;
+    cartStore: CartsStore;
+    // firstCartStore: MainCartStore;
+    // secondCartStore: MainCartStore;
+    // thirdCartStore: MainCartStore;
     productsStore: ProductsStore;
 
     constructor() {
-        const discountService = new DiscountService();
 
         this.productsStore = new ProductsStore();
-        this.cartStore = new CartStore( discountService, this);
+        this.cartStore = new CartsStore(this);
+        // this.firstCartStore = new MainCartStore(this);
+        // this.secondCartStore = new MainCartStore(this);
+        // this.thirdCartStore = new MainCartStore(this);
     }
 }
 

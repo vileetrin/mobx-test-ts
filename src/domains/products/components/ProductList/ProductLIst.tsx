@@ -1,11 +1,12 @@
 import { observer } from 'mobx-react-lite';
-import {useStore} from "../../infrastructure/StoreContext.ts";
+import {useStore} from "../../../../infrastructure/StoreContext.ts";
 import css from './ProductLIst.module.css';
 import {useEffect} from "react";
+import AddToCartBtn from "../AddToCartBtn/AddToCartBtn.tsx"
 
 const ProductList = observer(() => {
 
-    const {productsStore, cartStore} = useStore();
+    const {productsStore} = useStore();
     const products = productsStore.getAllProducts();
 
     useEffect(() => {
@@ -22,7 +23,7 @@ const ProductList = observer(() => {
                         <div className={css.content}>
                             <h3>{product.name}</h3>
                             <p>Price: {product.price}$</p>
-                            <button onClick={() => cartStore.addToCart(product.id)} className={css.btn}>Додати в кошик</button>
+                            <AddToCartBtn productId={product.id}/>
                         </div>
                     </li>
                 ))}

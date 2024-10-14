@@ -1,12 +1,12 @@
-import { observer } from 'mobx-react-lite';
-import { useStore } from '../../infrastructure/StoreContext.ts';
-import css from './CartPage.module.css';
+import {observer} from 'mobx-react-lite';
+import {useStore} from '../../../../infrastructure/StoreContext.ts';
+import css from './ThirdCart.module.css';
 
-const CartPage = observer(() => {
-    const { cartStore } = useStore();
+const ThirdCart = observer(() => {
+    const {cartStore} = useStore();
 
     const handleCheckout = () => {
-        const orderDetails: string = cartStore.cart
+        const orderDetails: string = cartStore.getCart3
             .map(
                 (item): string =>
                     `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
@@ -17,28 +17,28 @@ const CartPage = observer(() => {
     };
 
     return (
-        <div className={css.container}>
-            <h1>Your Cart</h1>
-            {cartStore.cart.length === 0 ? (
+        <div className={css.container} id="thirdCart">
+            <h1>Cart №3</h1>
+            {cartStore.getCart3.length === 0 ? (
                 <p>Your cart is empty.</p>
             ) : (
                 <ul className={css.list}>
-                    {cartStore.cart.map((product) => (
+                    {cartStore.getCart3.map((product) => (
                         <li key={product.id} className={css.item}>
-                            <img src={product.image} alt={product.name} className={css.img} />
+                            <img src={product.image} alt={product.name} className={css.img}/>
                             <h3>{product.name}</h3>
                             <div className={css.amountContainer}>
                                 <p>Кількість:</p>
                                 <div className={css.btnContainer}>
                                     <button
-                                        onClick={() => cartStore.decreaseQuantity(product.id)}
+                                        onClick={() => cartStore.decreaseQuantity(product.id, 'cart3')}
                                         className={css.btn}
                                     >
                                         -
                                     </button>
                                     <p>{product.amount}</p>
                                     <button
-                                        onClick={() => cartStore.increaseQuantity(product.id)}
+                                        onClick={() => cartStore.increaseQuantity(product.id, 'cart3')}
                                         className={css.btn}
                                     >
                                         +
@@ -47,7 +47,7 @@ const CartPage = observer(() => {
                             </div>
                             <p>Price: {product.price}$</p>
                             <button
-                                onClick={() => cartStore.removeFromCart(product.id)}
+                                onClick={() => cartStore.removeFromCart(product.id, 'cart3')}
                                 className={css.button}
                             >
                                 Видалити з кошика
@@ -56,13 +56,13 @@ const CartPage = observer(() => {
                     ))}
                 </ul>
             )}
-            <h2>Total Price: ${cartStore.totalPriceWithDiscount.toFixed(2)}</h2>
+            <h2>Cart №3 Total Price: ${cartStore.totalPriceWithDiscount.toFixed(2)}</h2>
             <p>Discount applied: {cartStore.discount * 100}%</p>
-            <button onClick={handleCheckout} disabled={cartStore.cart.length === 0} className={css.button}>
+            <button onClick={handleCheckout} disabled={cartStore.getCart1.length === 0} className={css.button}>
                 Оформити замовлення
             </button>
         </div>
     );
 });
 
-export default CartPage;
+export default ThirdCart;
