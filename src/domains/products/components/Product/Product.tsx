@@ -1,50 +1,55 @@
+// Product.tsx
 import css from "../../ProductPageController.module.css";
 import AddToCartBtn from "../AddToCartBtn/AddToCartBtn.tsx";
-import {IProductEntity} from "../../store/Product.ts";
-import {useStore} from "../../../../infrastructure/StoreContext.ts";
-import {useMemo} from "react";
-import {ProductVM} from "../../ViewModels/ProductVM.tsx";
-import {useState} from "react";
+import { IProductEntity } from "../../store/Product.ts";
+import { useStore } from "../../../../infrastructure/StoreContext.ts";
+import { useMemo } from "react";
+import { ProductVM } from "../../ViewModels/ProductVM.tsx";
+import { useState } from "react";
 
-export const Product = ({product}: {product: IProductEntity}) => {
-
-    const { cartModel } = useStore();
+export const Product = ({ product }: { product: IProductEntity }) => {
+    const { cartStore } = useStore();
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const vm = useMemo(() => {
-        return new ProductVM(cartModel)
-    }, [])
+        return new ProductVM(cartStore);
+    }, [cartStore]);
 
-    const closeModal = () => { setIsOpen(false) };
-    const openModal = () => { setIsOpen(true) };
+    const closeModal = () => { setIsOpen(false); };
+    const openModal = () => { setIsOpen(true); };
 
-
-    const handleClick = () => {
-        vm.addToCart(product);
+    const handleClick = (cartName: string) => {
+        vm.addToCart(cartName, product);
         setIsOpen(false);
-    }
+    };
 
     return (
         <>
-        <img src={product.image} alt={product.name} className={css.img}/>
-        <div className={css.content}>
-            <h3>{product.name}</h3>
-            <p>Price: {product.price}$</p>
-            <AddToCartBtn setOpen ={openModal} setClose ={closeModal} isOpen={isOpen} handleClick={handleClick}/>
+            <img src={product.image} alt={product.name} className={css.img} />
+            <div className={css.content}>
+                <h3>{product.name}</h3>
+                <p>Price: {product.price}$</p>
+                <AddToCartBtn
+                    setOpen={openModal}
+                    setClose={closeModal}
+                    isOpen={isOpen}
+                    handleClick={handleClick}
+                    cartNames={vm.getCartNames()} // передаем имена корзин
+                />
 
-            {/*{vm.getAvailability(product.id).length > 0 && (*/}
-            {/*    <div className={css.availability}>*/}
-            {/*        <h4>Наявність в кошиках:</h4>*/}
-            {/*        <ul>*/}
-            {/*            {vm.getAvailability(product.id).map((entry, idx) => (*/}
-            {/*                <li key={product.id + idx}>*/}
-            {/*                    {entry.cart}: {entry.amount} шт.*/}
-            {/*                </li>*/}
-            {/*            ))}*/}
-            {/*        </ul>*/}
-            {/*    </div>*/}
-            {/*)}*/}
-        </div>
+                {vm.getAvailability(product.id).length > 0 && (
+                    <div className={css.availability}>
+                        <h4>Наявність в кошиках:</h4>
+                        <ul>
+                            {vm.getAvailability(product.id).map((entry, idx) => (
+                                <li key={product.id + idx}>
+                                    {entry.cart}: {entry.amount} шт.
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
         </>
-    )
-}
+    );
+};

@@ -11,10 +11,6 @@ class ProductsStore {
         return this.products
     }
 
-    getProductById(id: number): IProductEntity | undefined {
-        return this.products.find(product => product.id === id);
-    }
-
     setProducts(products: Array<IProductEntity>) {
         this.products = products
     }

@@ -1,67 +1,57 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../infrastructure/StoreContext.ts';
 import css from './CartPage.module.css';
-// import FirstCart from "./components/FirstCart/FirstCart.tsx";
-// import SecondCart from "./components/SecondCart/SecondCart.tsx";
-// import ThirdCart from "./components/ThirdCart/ThirdCart.tsx";
-// import Summary from "./components/Summary/Summary.tsx";
-import {useMemo} from "react";
-import {CartPageVM} from "./ViewModels/CartPageVM.ts";
-import CartItem from "./components/CartItem.tsx"
+import Summary from "./components/Summary/Summary.tsx";
+import { useMemo } from "react";
+import { CartPageVM } from "./ViewModels/CartPageVM.ts";
+import CartItem from "./components/CartItem/CartItem.tsx";
 
 const CartPage = observer(() => {
-    const { cartModel } = useStore();
+    const { cartStore } = useStore();
 
     const vm = useMemo(() => {
-        return new CartPageVM([cartModel])
-    }, [])
+        return new CartPageVM(cartStore);
+    }, [cartStore]);
 
-    // const handleCheckout = () => {
-    //     const orderDetails: string = cartStore.getMainCart
-    //         .map(
-    //             (item): string =>
-    //                 `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
-    //         )
-    //         .join('\n');
-    //     const details = `Order details:\n${orderDetails}\nTotal Price: $${cartStore.totalPriceWithDiscount('main').toFixed(2)}`
-    //     alert(details);
-    // };
+    const handleCheckout = () => {
+        const orderDetails: string = vm.getCarts()
+            .flatMap(cart => cart.items.map(item => `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`))
+            .join('\n');
+
+        const details = `Order details:\n${orderDetails}\nTotal Price: $${vm.getCarts().reduce((sum, cart) => sum + cart.totalPriceWithDiscount, 0).toFixed(2)}`;
+        alert(details);
+    };
 
     return (
         <div className={css.container}>
             <ul className={css.navigation}>
                 <li className={css.navlink}>
-                    <a href="#firstCart" className={css.link}>Cart №1</a>
+                    <a href="#cart1" className={css.link}>Cart №1</a>
                 </li>
                 <li className={css.navlink}>
-                    <a href="#secondCart" className={css.link}>Cart №2</a>
+                    <a href="#cart2" className={css.link}>Cart №2</a>
                 </li>
                 <li className={css.navlink}>
-                    <a href="#thirdCart" className={css.link}>Cart №3</a>
+                    <a href="#cart3" className={css.link}>Cart №3</a>
                 </li>
             </ul>
             <ul>
-                {vm.getCarts().map((cart) => (
+                {vm.getCarts().map(cart => (
                     <li key={cart.cartId} className={css.item}>
                         <CartItem cart={cart} />
                     </li>
                 ))}
             </ul>
-            {/*<ul className={css.list}>*/}
-            {/*    <FirstCart/>*/}
-            {/*    <SecondCart/>*/}
-            {/*    <ThirdCart/>*/}
-            {/*</ul>*/}
-            {/*<div className={css.summaryContainer}>*/}
-            {/*    <Summary/>*/}
-            {/*    <div className={css.priceContainer}>*/}
-            {/*<h2>Total Price: ${cartStore.totalPriceWithDiscount('main').toFixed(2)}</h2>*/}
-            {/*<p>Discount applied: {cartStore.discount('main') * 100}%</p>*/}
-            {/*<button onClick={handleCheckout} disabled={cartStore.getMainCart.length === 0} className={css.button}>*/}
-            {/*    Оформити замовлення*/}
-            {/*</button>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+            <div className={css.summaryContainer}>
+                <Summary />
+                <div className={css.priceContainer}>
+                    <h2>Total Price: ${vm.getCarts().reduce((sum, cart) => sum + cart.totalPriceWithDiscount, 0).toFixed(2)}</h2>
+                    <p>Discount applied: {vm.getCarts().reduce((sum, cart) => sum + cart.discount * 100, 0)}%</p>
+                    <button onClick={handleCheckout} disabled={vm.getCarts().every(cart => cart.items.length === 0)} className={css.button}>
+                        Оформити замовлення
+                    </button>
+                </div>
+            </div>
         </div>
     );
 });

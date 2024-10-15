@@ -1,14 +1,27 @@
-import CartModel from "../domains/carts/store/CartModel.ts";
+import { makeObservable, observable } from 'mobx';
+import {ICartItem} from "../domains/carts/store/CartItem.ts";
 
-const CARTS_AMOUNT = 4;
-
-const CartsArray: CartModel[] = []
-
-export function handleCartsArray(){
-    for (let i = 0; i < CARTS_AMOUNT; i++) {
-        const cart = new CartModel();
-        cart.cartId = i;
-        CartsArray.push(cart)
-    }
-    return CartsArray;
+interface Carts {
+    [key: string]: ICartItem[];
 }
+
+const NUMBER_OF_CARTS = 3; // Кількість кошиків
+
+class CartsFactory {
+    carts: Carts = {};
+
+    constructor() {
+        makeObservable(this, {
+            carts: observable,
+        });
+        this.createCarts();
+    }
+
+    createCarts() {
+        for (let i = 1; i <= NUMBER_OF_CARTS; i++) {
+            this.carts[`cart${i}`] = [];
+        }
+    }
+}
+
+export const cartsFactory = new CartsFactory();

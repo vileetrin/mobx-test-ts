@@ -19,6 +19,5 @@ export class ProductPageVM {
     getProducts(): Array<IProductEntity> {
         return this._productsStore.getAllProducts()
     }
-
-
 }
+

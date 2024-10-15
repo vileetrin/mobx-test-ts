@@ -7,7 +7,7 @@ const Summary = () => {
         <div className={css.container}>
             <h2>Summary</h2>
             <ul>
-        {cartStore.getMainCart.map((item) => (
+        {cartStore.getMainCart().map((item) => (
             <li key={item.id} className={css.listItem}>
                 <div>
                 <p>Name: {item.name}</p>

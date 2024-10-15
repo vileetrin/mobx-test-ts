@@ -1,18 +1,31 @@
-import CartModel from "../store/CartModel.ts";
-import {handleCartsArray} from "../../../infrastructure/CartListService.ts";
+import { makeAutoObservable } from 'mobx';
+import CartsStore from '../store/CartsStore.ts';
 
-export class CartPageVM {
-    private _carts: Array<CartModel>;
+class CartPageVM {
+    private cartStore: CartsStore;
 
-    constructor(carts: Array<CartModel>) {
-        this._carts = carts;
+    constructor(cartStore: CartsStore) {
+        this.cartStore = cartStore;
+        makeAutoObservable(this);
     }
 
     getCarts() {
-        return this._carts = handleCartsArray();
+        return Object.entries(this.cartStore.carts).map(([key, items]) => ({
+            cartId: key,
+            items,
+            totalPrice: this.totalPrice(key),
+            discount: this.cartStore.discount(key),
+            totalPriceWithDiscount: this.totalPriceWithDiscount(key),
+        }));
     }
 
-    getCartById(id: number) {
-        return this._carts.find(cart => cart.cartId === id);
+    totalPrice(cartName: string): number {
+        return this.cartStore.totalPrice(cartName);
+    }
+
+    totalPriceWithDiscount(cartName: string): number {
+        return this.cartStore.totalPriceWithDiscount(cartName);
     }
 }
+
+export { CartPageVM };

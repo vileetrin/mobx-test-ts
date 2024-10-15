@@ -1,138 +1,91 @@
-import {makeAutoObservable} from 'mobx';
-
-import RootStore from "../../../infrastructure/RootStore.ts";
-import {ICartItem} from "./CartItem.ts";
+import { makeAutoObservable } from 'mobx';
+import { ICartItem } from "./CartItem.ts";
+import { cartsFactory } from "../../../infrastructure/CartListService.ts";
 
 class CartsStore {
-    private _mainCart: ICartItem[] = [];
-    private _cart1: ICartItem[] = [];
-    private _cart2: ICartItem[] = [];
-    private _cart3: ICartItem[] = [];
-    private _root: RootStore;
+    carts: { [key: string]: ICartItem[] };
+    mainCart: ICartItem[];
 
-    constructor(rootStore: RootStore) {
+    constructor() {
         makeAutoObservable(this);
-        this._root = rootStore;
+        this.carts = cartsFactory.carts;
+        this.mainCart = [];
     }
 
-    get getMainCart():Array<ICartItem> {
-        const allProducts: ICartItem[] = [
-            ...this._cart1,
-            ...this._cart2,
-            ...this._cart3
-        ];
-         const combined: ICartItem[] = allProducts.reduce((acc: ICartItem[], item: ICartItem): ICartItem[] => {
-            const existing:ICartItem | undefined = acc.find((i: { id: number; }) => i.id === item.id)
-            if(existing){
-                existing.amount += item.amount
-            } else {
-                acc.push({...item})
-            }
-            return acc;
-        }, [])
-
-        return this._mainCart = combined;
-    }
-
-    get getCart1 (): Array<ICartItem> {
-        return this._cart1;
-    }
-
-    get getCart2 (): Array<ICartItem> {
-        return this._cart2;
-    }
-
-    get getCart3 (): Array<ICartItem> {
-        return this._cart3;
-    }
-
-    private _getCartByType(cartType: string) {
-        switch (cartType) {
-            case 'main': return this._mainCart;
-            case 'cart1': return this._cart1;
-            case 'cart2': return this._cart2;
-            case 'cart3': return this._cart3;
-            default: return [];
+    addToCart(cartName: string, product: ICartItem) {
+        if (this.carts[cartName]) {
+            this.carts[cartName].push(product);
+            this.mainCart.push(product);
         }
     }
 
-    addToCart(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {
-        const cart = this._getCartByType(cartType);
-        const productInCart: ICartItem | undefined = cart.find(product => product.id === productId);
-        if (productInCart) {
-            alert(`Цей товар вже є в ${cartType}`);
-        } else {
-            const product = this._root.productsStore.getProductById(productId);
-            if (product) {
-                cart.push({...product, amount: 1});
-            }
+    removeFromCart(cartName: string, productId: number) {
+        if (this.carts[cartName]) {
+            this.carts[cartName] = this.carts[cartName].filter(
+                (p) => p.id !== productId
+            );
+            this.mainCart = this.mainCart.filter(p => p.id !== productId);
         }
     }
 
-    removeFromCart(productId: number, cartType: 'cart1' | 'cart2' | 'cart3') {
-        const cart = this._getCartByType(cartType);
-        const result = cart.filter(item => item.id !== productId);
-        if(cartType === 'cart1') {
-            this._cart1 = result;
-        } else if (cartType === 'cart2') {
-            this._cart2 = result;
-        } else if (cartType === 'cart3') {
-            this._cart3 = result;
-        }
-    }
-
-    increaseQuantity(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {
-        const cart = this._getCartByType(cartType);
-        const item = cart.find(item => item.id === productId);
+    increaseQuantity(productId: number, cartName: string) {
+        const item = this.carts[cartName]?.find(item => item.id === productId);
         if (item) {
             item.amount += 1;
+            const mainCartItem = this.mainCart.find(p => p.id === productId);
+            if (mainCartItem) {
+                mainCartItem.amount += 1;
+            }
         }
     }
 
-    decreaseQuantity(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {
-        const cart = this._getCartByType(cartType);
-        const item = cart.find(item => item.id === productId);
+    decreaseQuantity(productId: number, cartName: string) {
+        const item = this.carts[cartName]?.find(item => item.id === productId);
         if (item && item.amount > 1) {
             item.amount -= 1;
+            const mainCartItem = this.mainCart.find(p => p.id === productId);
+            if (mainCartItem) {
+                mainCartItem.amount -= 1;
+            }
         }
     }
 
-    totalItems(cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): number {
-        const cart = this._getCartByType(cartType);
-        return cart.reduce((sum, item) => sum + item.amount, 0);
+    totalItems(cartName: string): number {
+        return this.carts[cartName]?.reduce((sum, item) => sum + item.amount, 0) || 0;
     }
 
-    totalPrice(cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): number {
-        const cart = this._getCartByType(cartType);
-        return cart.reduce((sum, item) => sum + item.price * item.amount, 0);
+    totalPrice(cartName: string): number {
+        return this.carts[cartName]?.reduce((sum, item) => sum + item.price * item.amount, 0) || 0;
     }
 
-    discount (cartType: 'main' | 'cart1' | 'cart2' | 'cart3'):number {
-        if (this.totalItems(cartType) >= 3 && this.totalItems(cartType) < 10) {
+    discount(cartName: string): number {
+        const itemCount = this.totalItems(cartName);
+        if (itemCount >= 3 && itemCount < 10) {
             return 0.07;
-        } else if (this.totalItems(cartType) >= 10) {
+        } else if (itemCount >= 10) {
             return 0.10;
         }
         return 0;
     }
 
-    totalPriceWithDiscount(cartType: 'main' | 'cart1' | 'cart2' | 'cart3'): number {
-        return this.totalPrice(cartType) - this.totalPrice(cartType) * this.discount(cartType);
+    totalPriceWithDiscount(cartName: string): number {
+        return this.totalPrice(cartName) - this.totalPrice(cartName) * this.discount(cartName);
     }
 
     getProductAvailability(productId: number): { cart: string; amount: number }[] {
         const availability = [];
-        const cart1Item = this.getCart1.find(item => item.id === productId);
-        const cart2Item = this.getCart2.find(item => item.id === productId);
-        const cart3Item = this.getCart3.find(item => item.id === productId);
-
-        if (cart1Item) availability.push({ cart: "Cart №1", amount: cart1Item.amount });
-        if (cart2Item) availability.push({ cart: "Cart №2", amount: cart2Item.amount });
-        if (cart3Item) availability.push({ cart: "Cart №3", amount: cart3Item.amount });
-
+        for (const [cartName, items] of Object.entries(this.carts)) {
+            const item = items.find(item => item.id === productId);
+            if (item) {
+                availability.push({ cart: cartName, amount: item.amount });
+            }
+        }
         return availability;
     }
 
+    getMainCart() {
+        return this.mainCart;
+    }
 }
 
 export default CartsStore;

@@ -1,20 +1,23 @@
-import CartModel from "../../carts/store/CartModel.ts";
-import {IProductEntity} from "../store/Product.ts";
+// ProductVM.ts
+import CartsStore from "../../carts/store/CartsStore.ts";
+import { ICartItem } from "../../carts/store/CartItem.ts";
 
 export class ProductVM {
-    private _cartModel: CartModel
+    private _cartsStore: CartsStore;
 
-    constructor(cartModel: CartModel) {
-        this._cartModel = cartModel
+    constructor(cartsStore: CartsStore) {
+        this._cartsStore = cartsStore;
     }
 
     getAvailability(productId: number) {
-        return this._cartModel.getProductAvailability(productId)
+        return this._cartsStore.getProductAvailability(productId);
     }
 
-    addToCart(product: IProductEntity) {
-        this._cartModel.addToCart(product)
+    getCartNames() {
+        return Object.keys(this._cartsStore.carts);
     }
 
+    addToCart(cartName: string, product: ICartItem) {
+        this._cartsStore.addToCart(cartName, product);
+    }
 }
-
