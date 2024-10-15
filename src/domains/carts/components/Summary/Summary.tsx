@@ -8,7 +8,7 @@ const Summary = () => {
             <h2>Summary</h2>
             <ul>
         {cartStore.getMainCart.map((item) => (
-            <li className={css.listItem}>
+            <li key={item.id} className={css.listItem}>
                 <div>
                 <p>Name: {item.name}</p>
                 <p>Price: {item.price}$</p>

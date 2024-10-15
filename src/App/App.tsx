@@ -1,4 +1,4 @@
-import ProductList from '../domains/products/components/ProductList/ProductLIst.tsx';
+import ProductPageController from '../domains/products/ProductPageController.tsx';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import CartPage from '../domains/carts/components/CartPage/CartPage.tsx';
 import { observer } from 'mobx-react-lite';
@@ -14,7 +14,7 @@ const App = observer(() => {
             </nav>
 
             <Routes>
-                <Route path="/" element={<ProductList />} />
+                <Route path="/" element={<ProductPageController />} />
                 <Route path="/cart" element={<CartPage />} />
             </Routes>
         </Router>

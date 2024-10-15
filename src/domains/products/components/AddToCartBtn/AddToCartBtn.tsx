@@ -1,24 +1,17 @@
-import {useStore} from "../../../../infrastructure/StoreContext.ts";
-import React, {useState} from "react";
-import css from "../ProductList/ProductLIst.module.css";
+import css from "../../ProductLIst.module.css";
 // @ts-ignore
 import Modal from 'react-modal';
+import {useState} from "react";
 
 interface AddToCartBtnProps {
-    productId: number;
+  handleClick: (cartType: "cart1" | "cart2" | "cart3") => void;
 }
 
-const AddToCartBtn: React.FC<AddToCartBtnProps> = ({productId}) => {
-    const {cartStore} = useStore();
+const AddToCartBtn: React.FC<AddToCartBtnProps> = (handleClick) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const closeModal = () => { setIsOpen(false) };
     const openModal = () => { setIsOpen(true) };
-
-    const handleClick = (cartType: 'cart1' | 'cart2' | 'cart3') => {
-        cartStore.addToCart(productId, cartType);
-        closeModal();
-    }
 
     return (
         <div>
@@ -39,8 +32,6 @@ const AddToCartBtn: React.FC<AddToCartBtnProps> = ({productId}) => {
                         },
                 }}
             >
-
-
 
             <h2>Виберіть кошик</h2>
             <button onClick={() => handleClick('cart1')}>Додати до кошику №1</button>

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import {makeAutoObservable} from 'mobx';
 
 import RootStore from "../../../infrastructure/RootStore.ts";
 import {ICartItem} from "../CartItem.ts";
@@ -69,9 +69,10 @@ class CartsStore {
         }
     }
 
-    removeFromCart(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {
+    removeFromCart(productId: number, cartType: 'cart1' | 'cart2' | 'cart3') {
         const cart = this._getCartByType(cartType);
-        cart.filter(item => item.id !== productId);
+        const result = cart.filter(item => item.id !== productId);
+        return result;
     }
 
     increaseQuantity(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {

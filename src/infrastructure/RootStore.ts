@@ -1,5 +1,5 @@
 import CartsStore from '../domains/carts/store/CartsStore.ts';
-import ProductsStore from '../domains/products/ProductsStore.ts';
+import ProductsStore from '../domains/products/store/ProductsStore.ts';
 
 class RootStore {
     cartStore: CartsStore;

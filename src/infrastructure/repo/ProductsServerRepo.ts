@@ -1,8 +1,8 @@
-import {IProduct} from "../../domains/products/Product.ts";
+import {IProductEntity} from "../../domains/products/store/Product.ts";
 
 export class ProductsServerRepo {
 
-    static loadProducts = (): Promise<Array<IProduct>> => {
+    static loadProducts = (): Promise<Array<IProductEntity>> => {
         // go to server
         // and fetch data from them
         return Promise.resolve(
