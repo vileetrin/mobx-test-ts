@@ -1,24 +1,23 @@
-import css from "../../ProductLIst.module.css";
+import css from "../../ProductPageController.module.css";
 // @ts-ignore
 import Modal from 'react-modal';
-import {useState} from "react";
+import React from "react";
 
 interface AddToCartBtnProps {
-  handleClick: (cartType: "cart1" | "cart2" | "cart3") => void;
+    setOpen: () => void;
+    setClose: () => void;
+    isOpen: boolean;
+    handleClick: (cartType: "cart1" | "cart2" | "cart3") => void;
 }
 
-const AddToCartBtn: React.FC<AddToCartBtnProps> = (handleClick) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-
-    const closeModal = () => { setIsOpen(false) };
-    const openModal = () => { setIsOpen(true) };
+const AddToCartBtn: React.FC<AddToCartBtnProps> = ({setOpen, setClose, isOpen, handleClick}:AddToCartBtnProps) => {
 
     return (
         <div>
-            <button onClick={openModal} className={css.btn}>Додати в кошик</button>
+            <button onClick={setOpen} className={css.btn}>Додати в кошик</button>
             <Modal
                 isOpen={isOpen}
-                onRequestClose={closeModal}
+                onRequestClose={setClose}
                 contentLabel = "Вибір кошика"
                 ariaHideApp={false}
                 style={{
@@ -32,7 +31,6 @@ const AddToCartBtn: React.FC<AddToCartBtnProps> = (handleClick) => {
                         },
                 }}
             >
-
             <h2>Виберіть кошик</h2>
             <button onClick={() => handleClick('cart1')}>Додати до кошику №1</button>
             <button onClick={() => handleClick('cart2')}>Додати до кошику №2</button>

@@ -1,6 +1,6 @@
 import ProductPageController from '../domains/products/ProductPageController.tsx';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import CartPage from '../domains/carts/components/CartPage/CartPage.tsx';
+import CartPage from '../domains/carts/CartPage.tsx';
 import { observer } from 'mobx-react-lite';
 import css from "./App.module.css"
 

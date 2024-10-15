@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx';
 
 import RootStore from "../../../infrastructure/RootStore.ts";
-import {ICartItem} from "../CartItem.ts";
+import {ICartItem} from "./CartItem.ts";
 
 class CartsStore {
     private _mainCart: ICartItem[] = [];
@@ -72,7 +72,13 @@ class CartsStore {
     removeFromCart(productId: number, cartType: 'cart1' | 'cart2' | 'cart3') {
         const cart = this._getCartByType(cartType);
         const result = cart.filter(item => item.id !== productId);
-        return result;
+        if(cartType === 'cart1') {
+            this._cart1 = result;
+        } else if (cartType === 'cart2') {
+            this._cart2 = result;
+        } else if (cartType === 'cart3') {
+            this._cart3 = result;
+        }
     }
 
     increaseQuantity(productId: number, cartType: 'cart1' | 'cart2' | 'cart3'): void {

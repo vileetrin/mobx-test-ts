@@ -1,17 +1,17 @@
-import CartsStore from '../domains/carts/store/CartsStore.ts';
+// import CartsStore from '../domains/carts/store/CartsStore.ts';
 import ProductsStore from '../domains/products/store/ProductsStore.ts';
+import CartModel from '../domains/carts/store/CartModel.ts';
 
 class RootStore {
-    cartStore: CartsStore;
-    // firstCartStore: MainCartStore;
-    // secondCartStore: MainCartStore;
-    // thirdCartStore: MainCartStore;
+    // cartStore: CartsStore;
+    cartModel: CartModel;
     productsStore: ProductsStore;
 
     constructor() {
 
         this.productsStore = new ProductsStore();
-        this.cartStore = new CartsStore(this);
+        // this.cartStore = new CartsStore(this);
+        this.cartModel = new CartModel();
     }
 }
 

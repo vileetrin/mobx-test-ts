@@ -1,6 +1,6 @@
 import {observer} from 'mobx-react-lite';
 import {useStore} from "../../infrastructure/StoreContext.ts";
-import css from './ProductLIst.module.css';
+import css from './ProductPageController.module.css';
 import {useEffect, useMemo} from "react";
 import {Product} from "./components/Product/Product.tsx";
 import {ProductPageVM} from "./ViewModels/ProductPageVM.tsx";
@@ -21,7 +21,9 @@ const ProductPageController = observer(() => {
             <h1>Products</h1>
             <ul className={css.list}>
                 {vm.getProducts().map((product) => (
+                    <li key={product.id} className={css.item}>
                         <Product product={product}/>
+                    </li>
                 ))}
             </ul>
         </div>
