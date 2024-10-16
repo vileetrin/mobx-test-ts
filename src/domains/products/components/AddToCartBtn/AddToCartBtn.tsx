@@ -1,4 +1,3 @@
-// AddToCartBtn.tsx
 import css from "../../ProductPageController.module.css";
 // @ts-ignore
 import Modal from 'react-modal';

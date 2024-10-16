@@ -5,7 +5,7 @@ interface Carts {
     [key: string]: ICartItem[];
 }
 
-const NUMBER_OF_CARTS = 3; // Кількість кошиків
+const NUMBER_OF_CARTS = 3;
 
 class CartsFactory {
     carts: Carts = {};

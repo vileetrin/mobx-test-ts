@@ -34,7 +34,7 @@ export const Product = ({ product }: { product: IProductEntity }) => {
                     setClose={closeModal}
                     isOpen={isOpen}
                     handleClick={handleClick}
-                    cartNames={vm.getCartNames()} // передаем имена корзин
+                    cartNames={vm.getCartNames()}
                 />
 
                 {vm.getAvailability(product.id).length > 0 && (

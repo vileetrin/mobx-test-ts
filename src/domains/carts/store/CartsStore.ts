@@ -14,17 +14,22 @@ class CartsStore {
 
     addToCart(cartName: string, product: ICartItem) {
         if (this.carts[cartName]) {
-            this.carts[cartName].push(product);
-            this.mainCart.push(product);
+            const existing = this.carts[cartName].find(p => p.id === product.id);
+            if (existing) {
+                alert("Цей товар вже у кошику")
+            } else {
+                this.carts[cartName].push({...product, amount: 1})
+                this.mainCart.push({...product, amount: 1});
+            }
         }
     }
 
     removeFromCart(cartName: string, productId: number) {
         if (this.carts[cartName]) {
             this.carts[cartName] = this.carts[cartName].filter(
-                (p) => p.id !== productId
-            );
+                (p) => p.id !== productId);
             this.mainCart = this.mainCart.filter(p => p.id !== productId);
+            console.log(this.mainCart);
         }
     }
 
@@ -46,6 +51,7 @@ class CartsStore {
             const mainCartItem = this.mainCart.find(p => p.id === productId);
             if (mainCartItem) {
                 mainCartItem.amount -= 1;
+                console.log(this.mainCart);
             }
         }
     }
@@ -85,6 +91,27 @@ class CartsStore {
 
     getMainCart() {
         return this.mainCart;
+        // const callback = ((sum, item) => {
+        //     const existing = sum.find(p => p.id === item.id)
+        //     if (existing) {
+        //         existing.amount += item.amount
+        //     } else {
+        //         sum.push({...item})
+        //     }
+        //     return sum;
+        // });
+
+        // const combined = this.mainCart.reduce((sum, item) => {
+        //     console.log(sum, item)
+        //     const existing = sum.find(p => p.id === item.id)
+        //     if(existing){
+        //         existing.amount += item.amount
+        //     } else {
+        //         sum.push({...item})
+        //     }
+        //     return sum;
+        // });
+        // return this.mainCart = combined;
     }
 }
 

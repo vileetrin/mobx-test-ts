@@ -35,7 +35,7 @@ const CartPage = observer(() => {
                     <a href="#cart3" className={css.link}>Cart №3</a>
                 </li>
             </ul>
-            <ul>
+            <ul className={css.list}>
                 {vm.getCarts().map(cart => (
                     <li key={cart.cartId} className={css.item}>
                         <CartItem cart={cart} />

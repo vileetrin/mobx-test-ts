@@ -1,34 +1,32 @@
 import { makeAutoObservable } from 'mobx';
-import { ICartItem } from '../store/CartItem.ts';
+// import { ICartItem } from '../store/CartItem.ts';
 import CartsStore from "../store/CartsStore.ts";
+
 
 export class CartItemVM {
     private cartsStore: CartsStore;
     private cartName: string;
-    public product: ICartItem;
+    // public product: ICartItem;
 
-    constructor(cartsStore: CartsStore, cartName: string, product: ICartItem) {
+    constructor(cartsStore: CartsStore, cartName: string) {
         this.cartsStore = cartsStore;
         this.cartName = cartName;
-        this.product = product;
+        // this.product = product;
         makeAutoObservable(this);
     }
 
-    increaseQuantity() {
-        this.cartsStore.increaseQuantity(this.product.id, this.cartName);
+    increaseQuantity(productId:number) {
+        this.cartsStore.increaseQuantity(productId, this.cartName);
     }
 
-    decreaseQuantity() {
-        this.cartsStore.decreaseQuantity(this.product.id, this.cartName);
+    decreaseQuantity(productId: number) {
+        this.cartsStore.decreaseQuantity(productId, this.cartName);
     }
 
-    removeFromCart() {
-        this.cartsStore.removeFromCart(this.cartName, this.product.id);
+    removeFromCart(productId: number) {
+        this.cartsStore.removeFromCart(this.cartName, productId);
     }
 
-    get totalPrice(): number {
-        return this.product.price * this.product.amount;
-    }
 }
 
 export default CartItemVM;

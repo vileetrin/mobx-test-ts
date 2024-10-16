@@ -32,6 +32,14 @@
     border-radius: 20px;
     background-color: white;
 }
+
+
+.priceContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
 .btnContainer{
     display: flex;
     flex-direction: row;

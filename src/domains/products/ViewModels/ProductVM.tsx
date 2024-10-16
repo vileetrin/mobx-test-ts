@@ -1,4 +1,3 @@
-// ProductVM.ts
 import CartsStore from "../../carts/store/CartsStore.ts";
 import { ICartItem } from "../../carts/store/CartItem.ts";
 
