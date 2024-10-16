@@ -26,12 +26,23 @@ class CartsStore {
 
     removeFromCart(cartName: string, productId: number) {
         if (this.carts[cartName]) {
-            this.carts[cartName] = this.carts[cartName].filter(
-                (p) => p.id !== productId);
-            this.mainCart = this.mainCart.filter(p => p.id !== productId);
-            console.log(this.mainCart);
+            this.carts[cartName] = this.carts[cartName].filter((p) => p.id !== productId);
         }
-    }
+                const mainCartItem = this.mainCart.find((p) => p.id === productId);
+                if (mainCartItem) {
+                    const totalAmountInCarts = Object.values(this.carts)
+                        .flat()
+                        .filter((item) => item.id === productId)
+                        .reduce((sum, item) => sum + item.amount, 0);
+
+                    if (totalAmountInCarts > 0) {
+                        mainCartItem.amount -= 1;
+                    } else {
+                        this.mainCart = this.mainCart.filter((p) => p.id !== productId);
+                    }
+                }
+            }
+
 
     increaseQuantity(productId: number, cartName: string) {
         const item = this.carts[cartName]?.find(item => item.id === productId);
@@ -90,29 +101,20 @@ class CartsStore {
     }
 
     getMainCart() {
-        return this.mainCart;
-        // const callback = ((sum, item) => {
-        //     const existing = sum.find(p => p.id === item.id)
-        //     if (existing) {
-        //         existing.amount += item.amount
-        //     } else {
-        //         sum.push({...item})
-        //     }
-        //     return sum;
-        // });
+        const mergedCart: ICartItem[] = [];
 
-        // const combined = this.mainCart.reduce((sum, item) => {
-        //     console.log(sum, item)
-        //     const existing = sum.find(p => p.id === item.id)
-        //     if(existing){
-        //         existing.amount += item.amount
-        //     } else {
-        //         sum.push({...item})
-        //     }
-        //     return sum;
-        // });
-        // return this.mainCart = combined;
+        this.mainCart.forEach(product => {
+            const existingProduct = mergedCart.find(item => item.id === product.id);
+            if (existingProduct) {
+                existingProduct.amount += product.amount;
+            } else {
+                mergedCart.push({ ...product });
+            }
+        });
+
+        return mergedCart;
     }
+
 }
 
 export default CartsStore;
