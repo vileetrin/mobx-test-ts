@@ -41,3 +41,4 @@ const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ setOpen, setClose, isOpen, 
 };
 
 export default AddToCartBtn;
+

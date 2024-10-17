@@ -20,3 +20,4 @@ export class ProductVM {
         this._cartsStore.addToCart(cartName, product);
     }
 }
+

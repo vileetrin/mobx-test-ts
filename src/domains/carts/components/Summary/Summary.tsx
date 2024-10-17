@@ -33,3 +33,4 @@ const Summary = ({mainCart}: SummaryProps) => {
 }
 
 export default Summary
+

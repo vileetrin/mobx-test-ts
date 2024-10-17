@@ -52,3 +52,4 @@ export const Product = ({ product }: { product: IProductEntity }) => {
         </>
     );
 };
+
