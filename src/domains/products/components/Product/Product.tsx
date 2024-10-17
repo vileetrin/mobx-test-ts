@@ -1,4 +1,3 @@
-// Product.tsx
 import css from "../../ProductPageController.module.css";
 import AddToCartBtn from "../AddToCartBtn/AddToCartBtn.tsx";
 import { IProductEntity } from "../../store/Product.ts";
@@ -19,7 +18,7 @@ export const Product = ({ product }: { product: IProductEntity }) => {
     const openModal = () => { setIsOpen(true); };
 
     const handleClick = (cartName: string) => {
-        vm.addToCart(cartName, product);
+        vm.addToCart(cartName, {...product, amount: 1});
         setIsOpen(false);
     };
 

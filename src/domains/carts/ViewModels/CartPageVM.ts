@@ -19,13 +19,35 @@ class CartPageVM {
         }));
     }
 
+    getMainCart(){
+        return this.cartStore.getMainCart();
+    }
+
+
     totalPrice(cartName: string): number {
         return this.cartStore.totalPrice(cartName);
     }
 
-    totalPriceWithDiscount(cartName: string): number {
-        return this.cartStore.totalPriceWithDiscount(cartName);
+    totalPriceWithDiscount(cartName?: string): number {
+        if(cartName){
+            return this.cartStore.totalPriceWithDiscount(cartName);
+        } else {
+            return this.cartStore.totalPriceWithDiscount();
+        }
     }
+
+    mainDiscount(): number {
+        return this.cartStore.mainDiscount();
+    }
+
+    handleCheckout(){
+        const orderDetails: string = this.getCarts()
+            .flatMap(cart => cart.items.map(item => `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`))
+            .join('\n');
+
+        const details = `Order details:\n${orderDetails}\nTotal Price: $${this.getCarts().reduce((sum, cart) => sum + cart.totalPriceWithDiscount, 0).toFixed(2)}`;
+        alert(details);
+    };
 }
 
 export { CartPageVM };

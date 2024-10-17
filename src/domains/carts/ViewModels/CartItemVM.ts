@@ -1,17 +1,14 @@
 import { makeAutoObservable } from 'mobx';
-// import { ICartItem } from '../store/CartItem.ts';
 import CartsStore from "../store/CartsStore.ts";
 
 
 export class CartItemVM {
     private cartsStore: CartsStore;
     private cartName: string;
-    // public product: ICartItem;
 
     constructor(cartsStore: CartsStore, cartName: string) {
         this.cartsStore = cartsStore;
         this.cartName = cartName;
-        // this.product = product;
         makeAutoObservable(this);
     }
 
@@ -26,6 +23,21 @@ export class CartItemVM {
     removeFromCart(productId: number) {
         this.cartsStore.removeFromCart(this.cartName, productId);
     }
+
+    getCartByName(cartName: string) {
+        return this.cartsStore.carts[cartName];
+    }
+
+    // const handleCheckout(cartName: string) {
+    //     const orderDetails: string = this.getCartByName(cartName)
+    //         .map(
+    //             (item): string =>
+    //                 `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
+    //         )
+    //         .join('\n');
+    //
+    //     alert(`Order details:\n${orderDetails}\nTotal Price: $${this.cartsStore.totalPriceWithDiscount(cartName).toFixed(2)}`);
+    // };
 
 }
 

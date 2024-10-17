@@ -62,17 +62,27 @@ class CartsStore {
             const mainCartItem = this.mainCart.find(p => p.id === productId);
             if (mainCartItem) {
                 mainCartItem.amount -= 1;
-                console.log(this.mainCart);
             }
         }
     }
 
-    totalItems(cartName: string): number {
-        return this.carts[cartName]?.reduce((sum, item) => sum + item.amount, 0) || 0;
+    totalItems(cartName?: string): number {
+        if(cartName){
+            return this.carts[cartName]?.reduce((sum, item) => sum + item.amount, 0) || 0;
+        } else {
+            return this.mainCart.reduce((sum, item) => sum + item.amount, 0) || 0;
+        }
+
     }
 
-    totalPrice(cartName: string): number {
-        return this.carts[cartName]?.reduce((sum, item) => sum + item.price * item.amount, 0) || 0;
+
+    totalPrice(cartName?: string): number {
+        if(cartName){
+            return this.carts[cartName]?.reduce((sum, item) => sum + item.price * item.amount, 0) || 0;
+        } else {
+            return this.mainCart.reduce((sum, item) => sum + item.price * item.amount, 0) || 0;
+        }
+
     }
 
     discount(cartName: string): number {
@@ -85,8 +95,23 @@ class CartsStore {
         return 0;
     }
 
-    totalPriceWithDiscount(cartName: string): number {
-        return this.totalPrice(cartName) - this.totalPrice(cartName) * this.discount(cartName);
+    mainDiscount(): number{
+        const itemCount = this.totalItems();
+        if (itemCount >= 3 && itemCount < 10) {
+            return 0.07;
+        } else if (itemCount >= 10) {
+            return 0.10;
+        }
+        return 0;
+    }
+
+    totalPriceWithDiscount(cartName?: string): number {
+        if(cartName){
+            return this.totalPrice(cartName) - this.totalPrice(cartName) * this.discount(cartName);
+        } else {
+            return this.totalPrice() - this.totalPrice() * this.mainDiscount();
+        }
+
     }
 
     getProductAvailability(productId: number): { cart: string; amount: number }[] {
