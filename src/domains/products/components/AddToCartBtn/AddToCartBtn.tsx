@@ -11,7 +11,7 @@ interface AddToCartBtnProps {
     cartNames: string[];
 }
 
-const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ setOpen, setClose, isOpen, handleClick, cartNames }) => {
+const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ setOpen, setClose, isOpen, handleClick, cartNames }:AddToCartBtnProps) => {
     return (
         <div>
             <button onClick={setOpen} className={css.btn}>Додати в кошик</button>

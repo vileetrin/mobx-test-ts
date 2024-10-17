@@ -1,13 +1,22 @@
-import {useStore} from "../../../../infrastructure/StoreContext.ts";
 import css from "./Summary.module.css";
 
-const Summary = () => {
-    const {cartStore} = useStore()
+interface SummaryProps {
+    mainCart: {
+        id: number,
+        amount: number,
+        price: number,
+        name: string,
+        image: string,
+    }[];
+}
+
+const Summary = ({mainCart}: SummaryProps) => {
+
     return (
         <div className={css.container}>
             <h2>Summary</h2>
             <ul>
-        {cartStore.getMainCart().map((item) => (
+        {mainCart.map((item) => (
             <li key={item.id} className={css.listItem}>
                 <div>
                 <p>Name: {item.name}</p>

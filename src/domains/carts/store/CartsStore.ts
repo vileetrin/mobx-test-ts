@@ -137,7 +137,7 @@ class CartsStore {
             }
         });
 
-        return mergedCart;
+        return this.mainCart = mergedCart;
     }
 
 }

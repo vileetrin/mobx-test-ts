@@ -40,13 +40,12 @@ class CartPageVM {
         return this.cartStore.mainDiscount();
     }
 
-    handleCheckout(){
-        const orderDetails: string = this.getCarts()
-            .flatMap(cart => cart.items.map(item => `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`))
+    handleCheckout ()  {
+        const orderDetails: string = this.getMainCart()
+            .map(item => `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`)
             .join('\n');
 
-        const details = `Order details:\n${orderDetails}\nTotal Price: $${this.getCarts().reduce((sum, cart) => sum + cart.totalPriceWithDiscount, 0).toFixed(2)}`;
-        alert(details);
+        return `Order details:\n${orderDetails}\nTotal Price: $${this.totalPriceWithDiscount().toFixed(2)}`;
     };
 }
 

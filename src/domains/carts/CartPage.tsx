@@ -13,6 +13,8 @@ const CartPage = observer(() => {
         return new CartPageVM(cartStore);
     }, [cartStore]);
 
+    const mainCart = vm.getMainCart()
+
     return (
         <div className={css.container}>
             <ul className={css.navigation}>
@@ -34,11 +36,11 @@ const CartPage = observer(() => {
                 ))}
             </ul>
             <div className={css.summaryContainer}>
-                <Summary />
+                <Summary mainCart={mainCart} />
                 <div className={css.priceContainer}>
                     <h2>Total Price: ${vm.totalPriceWithDiscount().toFixed(2)}</h2>
                     <p>Discount applied: {vm.mainDiscount() * 100}%</p>
-                    <button onClick={vm.handleCheckout} disabled={vm.getCarts().every(cart => cart.items.length === 0)} className={css.button}>
+                    <button onClick={() => alert(vm.handleCheckout())} disabled={vm.getCarts().every(cart => cart.items.length === 0)} className={css.button}>
                         Оформити замовлення
                     </button>
                 </div>

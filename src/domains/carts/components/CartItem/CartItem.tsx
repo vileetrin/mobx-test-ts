@@ -17,18 +17,6 @@ const CartItem = observer(({ cart }: CartProps) => {
 
     const vm = useMemo(() => new CartItemVM(cartStore, cart.cartId), []);
 
-    const handleCheckout = () => {
-        const orderDetails: string = vm.getCartByName(cart.cartId)
-            .map(
-                (item): string =>
-                    `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
-            )
-            .join('\n');
-
-        alert(`Order details:\n${orderDetails}\nTotal Price: $${cartStore.totalPriceWithDiscount(cart.cartId).toFixed(2)}`);
-    };
-
-
     return (
         <div className={css.container} id={cart.cartId}>
             <h1>{cart.cartId}</h1>
@@ -66,7 +54,7 @@ const CartItem = observer(({ cart }: CartProps) => {
                             <h2>{cart.cartId} Total Price:
                                 ${cartStore.totalPriceWithDiscount(cart.cartId).toFixed(2)}</h2>
                             <p>Discount applied: {cartStore.discount(cart.cartId) * 100}%</p>
-                            <button className={css.button} onClick={handleCheckout}>
+                            <button className={css.button} onClick={() => alert(vm.handleCheckout())}>
                                 Оформити замовлення
                             </button>
                         </div>

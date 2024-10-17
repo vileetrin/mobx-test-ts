@@ -1,10 +1,10 @@
-import { makeAutoObservable } from 'mobx';
+import {makeAutoObservable} from 'mobx';
 import CartsStore from "../store/CartsStore.ts";
 
 
 export class CartItemVM {
     private cartsStore: CartsStore;
-    private cartName: string;
+    private readonly cartName: string;
 
     constructor(cartsStore: CartsStore, cartName: string) {
         this.cartsStore = cartsStore;
@@ -12,7 +12,7 @@ export class CartItemVM {
         makeAutoObservable(this);
     }
 
-    increaseQuantity(productId:number) {
+    increaseQuantity(productId: number) {
         this.cartsStore.increaseQuantity(productId, this.cartName);
     }
 
@@ -24,20 +24,21 @@ export class CartItemVM {
         this.cartsStore.removeFromCart(this.cartName, productId);
     }
 
-    getCartByName(cartName: string) {
-        return this.cartsStore.carts[cartName];
+    getCartByName() {
+        return this.cartsStore.carts[this.cartName];
     }
 
-    // const handleCheckout(cartName: string) {
-    //     const orderDetails: string = this.getCartByName(cartName)
-    //         .map(
-    //             (item): string =>
-    //                 `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
-    //         )
-    //         .join('\n');
-    //
-    //     alert(`Order details:\n${orderDetails}\nTotal Price: $${this.cartsStore.totalPriceWithDiscount(cartName).toFixed(2)}`);
-    // };
+    handleCheckout(): string {
+        const orderDetails: string = this.getCartByName()
+            .map(
+                (item): string =>
+                    `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
+            )
+            .join('\n');
+
+        return (`Order details:\n${orderDetails}\nTotal Price: $${this.cartsStore.totalPriceWithDiscount('cart1').toFixed(2)}`);
+    };
+
 
 }
 
