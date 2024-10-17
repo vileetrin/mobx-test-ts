@@ -4,3 +4,4 @@ export interface IProductEntity {
     price: number;
     image: string;
 }
+

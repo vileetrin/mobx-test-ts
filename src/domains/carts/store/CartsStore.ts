@@ -1,3 +1,39 @@
+// import { makeAutoObservable } from 'mobx';
+// import { cartsFactory } from "../../../infrastructure/CartListService.ts";
+// import CartModel from "../Models/CartModel.ts";
+//
+// class CartsStore {
+//     private _carts: CartModel[]
+//
+//     constructor() {
+//         makeAutoObservable(this);
+//         this._carts = cartsFactory.carts;
+//     }
+//
+//     get carts (){
+//         return this.carts;
+//     }
+//
+//     get totalPrice(){}
+//
+//     get totalAmount(){}
+//
+//     get totalDiscount(){}
+//
+//     get totalPriceWithDiscount(){}
+//
+//     summaryInfo(){}
+// }
+//
+// export default CartsStore;
+//
+//
+
+
+
+
+
+
 import { makeAutoObservable } from 'mobx';
 import { ICartItem } from "./CartItem.ts";
 import { cartsFactory } from "../../../infrastructure/CartListService.ts";
