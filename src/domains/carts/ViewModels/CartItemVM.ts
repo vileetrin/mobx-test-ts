@@ -21,7 +21,7 @@ export class CartItemVM {
         const full = [];
         const fullProduct = products.map(product => {
             const oneProduct = this.getProductById(product.productId)
-            // full.push({...oneProduct, ...product});
+
         });
         console.log(fullProduct)
 
@@ -30,6 +30,7 @@ export class CartItemVM {
     // totalPrice(products: ICartItem[]): number {
     //     return this.getProductsById(products).reduce((sum, item) => sum + item.price * item.amount, 0) || 0;
     // }
+
 
 
 

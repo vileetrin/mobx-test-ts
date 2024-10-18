@@ -11,7 +11,7 @@ const CartPage = observer(() => {
 
     const vm = useMemo(() => {
         return new CartPageVM(cartsStore);
-    }, [cartsStore]);
+    }, []);
 
     return (
         <div className={css.container}>
