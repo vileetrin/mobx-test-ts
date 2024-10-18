@@ -14,6 +14,10 @@ class ProductsStore {
     setProducts(products: Array<IProductEntity>) {
         this.products = products
     }
+
+    getProductById(id: number) {
+        return this.products.find(product => product.id === id)
+    }
 }
 
 export default ProductsStore;

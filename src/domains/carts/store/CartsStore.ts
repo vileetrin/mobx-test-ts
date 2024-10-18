@@ -1,61 +1,57 @@
 import { makeAutoObservable } from 'mobx';
-import { cartsFactory } from "../../../infrastructure/CartsFactory.ts";
+// import { cartsFactory } from "../../../infrastructure/CartsFactory.ts";
 import CartModel from "../Models/CartModel.ts";
-
-interface Carts {
-    [key: string]: CartModel;
-}
+import {Carts} from "../Models/Carts.ts";
 
 class CartsStore {
     private _carts: Carts;
 
-    constructor() {
+    constructor(carts: Carts) {
         makeAutoObservable(this);
-        this._carts = Object.keys(cartsFactory.carts).reduce((acc: Carts, key) => {
-            acc[key] = new CartModel(cartsFactory.carts[key]);
-            return acc;
-        }, {});
+        this._carts = carts;
     }
 
-    get carts() {
+    get carts(): Carts {
         return this._carts;
     }
 
-    get totalPrice(): number {
-        return Object.values(this._carts).reduce((total, cart) => {
-            return total + cart.totalPrice();
-        }, 0);
+    getCarts():Array<CartModel> {
+        return Object.values(this._carts)
     }
 
-    get totalAmount(): number {
-        return Object.values(this._carts).reduce((total, cart) => {
-            return total + cart.totalItems();
-        }, 0);
-    }
-
-    get totalDiscount(): number {
-        const itemCount = this.totalAmount;
-        if (itemCount >= 3 && itemCount < 10) {
-            return 0.07;
-        } else if (itemCount >= 10) {
-            return 0.10;
-        }
-        return 0;
-    }
-
-    get totalPriceWithDiscount(): number {
-        const totalPrice = this.totalPrice;
-        return totalPrice - totalPrice * this.totalDiscount;
-    }
-
-    summaryInfo(): string {
-        return `
-            Общая стоимость: ${this.totalPrice.toFixed(2)} грн
-            Количество товаров: ${this.totalAmount}
-            Скидка: ${(this.totalDiscount * 100).toFixed(2)}%
-            Общая стоимость со скидкой: ${this.totalPriceWithDiscount.toFixed(2)} грн
-        `;
-    }
+    // get totalPrice(): number {
+    //     return Object.values(this._carts).reduce((total, cart) => {
+    //         return total + cart.totalPrice();
+    //     }, 0);
+    // }
+    //
+    // get totalAmount(): number {
+    //     return Object.values(this._carts).reduce((total, cart) => {
+    //         return total + cart.totalItems();
+    //     }, 0);
+    // }
+    //
+    // get totalDiscount(): number {
+    //     const itemCount = this.totalAmount;
+    //     if (itemCount >= 3 && itemCount < 10) {
+    //         return 0.07;
+    //     } else if (itemCount >= 10) {
+    //         return 0.10;
+    //     }
+    //     return 0;
+    // }
+    //
+    // get totalPriceWithDiscount(): number {
+    //     const totalPrice = this.totalPrice;
+    //     return totalPrice - totalPrice * this.totalDiscount;
+    // }
+    //
+    // summaryInfo(): string {
+    //     return `
+    //         Загальна вартість: ${this.totalPriceWithDiscount.toFixed(2)} грн
+    //         Знижка: ${(this.totalDiscount * 100).toFixed(2)}%
+    //     `;
+    // }
 }
 
 export default CartsStore;

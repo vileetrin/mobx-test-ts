@@ -1,19 +1,17 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../infrastructure/StoreContext.ts';
 import css from './CartPage.module.css';
-import Summary from "./components/Summary/Summary.tsx";
+// import Summary from "./components/Summary/Summary.tsx";
 import { useMemo } from "react";
 import { CartPageVM } from "./ViewModels/CartPageVM.ts";
 import CartItem from "./components/CartItem/CartItem.tsx";
 
 const CartPage = observer(() => {
-    const { cartStore } = useStore();
+    const { cartsStore } = useStore();
 
     const vm = useMemo(() => {
-        return new CartPageVM(cartStore);
-    }, [cartStore]);
-
-    const mainCart = vm.getMainCart()
+        return new CartPageVM(cartsStore);
+    }, [cartsStore]);
 
     return (
         <div className={css.container}>
@@ -30,20 +28,20 @@ const CartPage = observer(() => {
             </ul>
             <ul className={css.list}>
                 {vm.getCarts().map(cart => (
-                    <li key={cart.cartId} className={css.item}>
+                    <li key={cart.name} className={css.item}>
                         <CartItem cart={cart} />
                     </li>
                 ))}
             </ul>
             <div className={css.summaryContainer}>
-                <Summary mainCart={mainCart} />
-                <div className={css.priceContainer}>
-                    <h2>Total Price: ${vm.totalPriceWithDiscount().toFixed(2)}</h2>
-                    <p>Discount applied: {vm.mainDiscount() * 100}%</p>
-                    <button onClick={() => alert(vm.handleCheckout())} disabled={vm.getCarts().every(cart => cart.items.length === 0)} className={css.button}>
-                        Оформити замовлення
-                    </button>
-                </div>
+                {/*<Summary summary={vm.getSummary} />*/}
+                {/*<div className={css.priceContainer}>*/}
+                {/*    <h2>Total Price: ${vm.totalPriceWithDiscount().toFixed(2)}</h2>*/}
+                {/*    <p>Discount applied: {vm.mainDiscount() * 100}%</p>*/}
+                {/*    <button onClick={() => alert(vm.handleCheckout())} disabled={vm.getCarts().every(cart => cart.items.length === 0)} className={css.button}>*/}
+                {/*        Оформити замовлення*/}
+                {/*    </button>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

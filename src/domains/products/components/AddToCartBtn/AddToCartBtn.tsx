@@ -1,23 +1,26 @@
 import css from "../../ProductPageController.module.css";
 // @ts-ignore
 import Modal from 'react-modal';
-import React from "react";
+import React, {useState} from "react";
+import {ProductVM} from "../../ViewModels/ProductVM.tsx";
+import CartListItem from "../CartListItem/CartListItem.tsx";
 
 interface AddToCartBtnProps {
-    setOpen: () => void;
-    setClose: () => void;
-    isOpen: boolean;
-    handleClick: (cartType: string) => void;
-    cartNames: string[];
+    vm: ProductVM;
 }
 
-const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ setOpen, setClose, isOpen, handleClick, cartNames }:AddToCartBtnProps) => {
+const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ vm }:AddToCartBtnProps) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const closeModal = () => { setIsOpen(false); };
+    const openModal = () => { setIsOpen(true); };
+
     return (
         <div>
-            <button onClick={setOpen} className={css.btn}>Додати в кошик</button>
+            <button onClick={openModal} className={css.btn}>Додати в кошик</button>
             <Modal
                 isOpen={isOpen}
-                onRequestClose={setClose}
+                onRequestClose={closeModal}
                 contentLabel="Вибір кошика"
                 ariaHideApp={false}
                 style={{
@@ -32,8 +35,10 @@ const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ setOpen, setClose, isOpen, 
                 }}
             >
                 <h2>Виберіть кошик</h2>
-                {cartNames.map((cartName) => (
-                    <button key={cartName} onClick={() => handleClick(cartName)}>{cartName}</button>
+                {vm.getCarts().map((cart) => (
+                    <CartListItem key={cart.name} productId={vm.getProduct().id} cart={cart} onAddedToCart={() => {
+                        closeModal();
+                    }}/>
                 ))}
             </Modal>
         </div>
@@ -41,4 +46,3 @@ const AddToCartBtn: React.FC<AddToCartBtnProps> = ({ setOpen, setClose, isOpen, 
 };
 
 export default AddToCartBtn;
-

@@ -1,45 +1,48 @@
 import {makeAutoObservable} from 'mobx';
-import CartsStore from "../store/CartsStore.ts";
+import ProductsStore from "../../products/store/ProductsStore.ts";
+import {IProductEntity} from "../../products/store/Product.ts";
+import {ICartItem} from "../store/CartItem.ts";
 
 
 export class CartItemVM {
-    private cartsStore: CartsStore;
-    private readonly cartName: string;
+    private _productsStore: ProductsStore;
 
-    constructor(cartsStore: CartsStore, cartName: string) {
-        this.cartsStore = cartsStore;
-        this.cartName = cartName;
+    constructor(productsStore: ProductsStore ) {
         makeAutoObservable(this);
+        this._productsStore = productsStore;
     }
 
-    increaseQuantity(productId: number) {
-        this.cartsStore.increaseQuantity(productId, this.cartName);
+    getProductById(productId: number): IProductEntity{
+        return <IProductEntity>this._productsStore.getProductById(productId);
     }
 
-    decreaseQuantity(productId: number) {
-        this.cartsStore.decreaseQuantity(productId, this.cartName);
+    getProductsById(products: ICartItem[]){
+        // console.log(cartName, products);
+        const full = [];
+        const fullProduct = products.map(product => {
+            const oneProduct = this.getProductById(product.productId)
+            // full.push({...oneProduct, ...product});
+        });
+        console.log(fullProduct)
+
     }
 
-    removeFromCart(productId: number) {
-        this.cartsStore.removeFromCart(this.cartName, productId);
-    }
-
-    getCartByName() {
-        return this.cartsStore.carts[this.cartName];
-    }
-
-    handleCheckout(): string {
-        const orderDetails: string = this.getCartByName()
-            .map(
-                (item): string =>
-                    `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
-            )
-            .join('\n');
-
-        return (`Order details:\n${orderDetails}\nTotal Price: $${this.cartsStore.totalPriceWithDiscount('cart1').toFixed(2)}`);
-    };
+    // totalPrice(products: ICartItem[]): number {
+    //     return this.getProductsById(products).reduce((sum, item) => sum + item.price * item.amount, 0) || 0;
+    // }
 
 
+
+    // handleCheckout(): string {
+    //     const orderDetails: string = this.getCartItems()
+    //         .map(
+    //             (item): string =>
+    //                 `Name: ${item.name}, Price: $${item.price}, Quantity: ${item.amount}`
+    //         )
+    //         .join('\n');
+    //
+    //     return (`Order details:\n${orderDetails}\nTotal Price: $${this.cartsStore.totalPriceWithDiscount('cart1').toFixed(2)}`);
+    // };
 }
 
 export default CartItemVM;
