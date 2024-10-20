@@ -1,63 +1,71 @@
 import { makeAutoObservable } from 'mobx';
-// import { cartsFactory } from "../../../infrastructure/CartsFactory.ts";
-import CartModel from "../Models/CartModel.ts";
-import {Carts} from "../Models/Carts.ts";
+import CartModel from '../Models/CartModel.ts';
+import { Carts } from '../Models/Carts.ts';
 
 class CartsStore {
-    private _carts: Carts;
+  private _carts: Carts;
 
-    constructor(carts: Carts) {
-        makeAutoObservable(this);
-        this._carts = carts;
+  constructor(carts: Carts) {
+    makeAutoObservable(this);
+    this._carts = carts;
+  }
+
+  get carts(): Carts {
+    return this._carts;
+  }
+
+  getCarts(): Array<CartModel> {
+    return Object.values(this._carts);
+  }
+
+  get totalAmount(): number {
+    return Object.values(this._carts).reduce((total, cart) => {
+      return total + cart.totalItems();
+    }, 0);
+  }
+
+  getProductAvailability(productId: number): Array<{ cartName: string; amount: number }> {
+    const availability = [];
+
+    for (const cart of Object.values(this._carts)) {
+      const item = cart.items.find(item => item.productId === productId);
+      if (item) {
+        availability.push({ cartName: cart.name, amount: item.amount });
+      }
     }
+    return availability;
+  }
 
-    get carts(): Carts {
-        return this._carts;
-    }
-
-    getCarts():Array<CartModel> {
-        return Object.values(this._carts)
-    }
-
-    // get totalPrice(): number {
-    //     return Object.values(this._carts).reduce((total, cart) => {
-    //         return total + cart.totalPrice();
-    //     }, 0);
-    // }
-    //
-    // get totalAmount(): number {
-    //     return Object.values(this._carts).reduce((total, cart) => {
-    //         return total + cart.totalItems();
-    //     }, 0);
-    // }
-    //
-    // get totalDiscount(): number {
-    //     const itemCount = this.totalAmount;
-    //     if (itemCount >= 3 && itemCount < 10) {
-    //         return 0.07;
-    //     } else if (itemCount >= 10) {
-    //         return 0.10;
-    //     }
-    //     return 0;
-    // }
-    //
-    // get totalPriceWithDiscount(): number {
-    //     const totalPrice = this.totalPrice;
-    //     return totalPrice - totalPrice * this.totalDiscount;
-    // }
-    //
-    // summaryInfo(): string {
-    //     return `
-    //         Загальна вартість: ${this.totalPriceWithDiscount.toFixed(2)} грн
-    //         Знижка: ${(this.totalDiscount * 100).toFixed(2)}%
-    //     `;
-    // }
+  // get totalPrice(): number {
+  //     return Object.values(this._carts).reduce((total, cart) => {
+  //         return total + cart.totalPrice();
+  //     }, 0);
+  // }
+  //
+  // get totalDiscount(): number {
+  //     const itemCount = this.totalAmount;
+  //     if (itemCount >= 3 && itemCount < 10) {
+  //         return 0.07;
+  //     } else if (itemCount >= 10) {
+  //         return 0.10;
+  //     }
+  //     return 0;
+  // }
+  //
+  // get totalPriceWithDiscount(): number {
+  //     const totalPrice = this.totalPrice;
+  //     return totalPrice - totalPrice * this.totalDiscount;
+  // }
+  //
+  // summaryInfo(): string {
+  //     return `
+  //         Загальна вартість: ${this.totalPriceWithDiscount.toFixed(2)} грн
+  //         Знижка: ${(this.totalDiscount * 100).toFixed(2)}%
+  //     `;
+  // }
 }
 
 export default CartsStore;
-
-
-
 
 
 // import { makeAutoObservable } from 'mobx';
