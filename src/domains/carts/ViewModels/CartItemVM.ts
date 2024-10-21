@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx';
+import {computed, makeObservable, untracked} from 'mobx';
 import ProductsStore from "../../products/store/ProductsStore.ts";
 import {IProductEntity} from "../../products/store/Product.ts";
 import CartModel from "../Models/CartModel.ts";
@@ -10,13 +10,16 @@ export class CartItemVM {
     private _cart: CartModel
 
     constructor(productsStore: ProductsStore, cart: CartModel) {
-        makeAutoObservable(this);
+        makeObservable(this, {
+            totalPriceWithDiscount: computed,
+            discount: computed,
+        })
         this._productsStore = productsStore;
         this._cart = cart;
     }
 
     getProductById(productId: number): IProductEntity {
-        return <IProductEntity>this._productsStore.getProductById(productId);
+        return <IProductEntity>untracked(() => this._productsStore.getProductById(productId));
     }
 
     decreaseQuantity(productId: number): void {
@@ -38,12 +41,12 @@ export class CartItemVM {
         }, 0);
     }
 
-    discount(): number {
+    get discount(): number {
         return this._cart.discount();
     }
 
-    totalPriceWithDiscount(): number {
-        return this.totalPrice() - this.totalPrice() * this.discount();
+    get totalPriceWithDiscount(): number {
+        return this.totalPrice() - this.totalPrice() * this.discount;
 
     }
 
@@ -55,7 +58,7 @@ export class CartItemVM {
             })
             .join('\n');
 
-        const totalPriceWithDiscount: string = this.totalPriceWithDiscount().toFixed(2);
+        const totalPriceWithDiscount: string = this.totalPriceWithDiscount.toFixed(2);
 
         return `Order details:\n${orderDetails}\nTotal Price: $${totalPriceWithDiscount}`;
     }

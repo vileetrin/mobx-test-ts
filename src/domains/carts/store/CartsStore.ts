@@ -1,26 +1,21 @@
 import {makeAutoObservable} from 'mobx';
 import CartModel from '../Models/CartModel.ts';
-import {Carts} from '../Models/Carts.ts';
 import {ICartItem} from "./CartItem.ts";
 
 class CartsStore {
-    private _carts: Carts;
+    private _carts: Array<CartModel>;
 
-    constructor(carts: Carts) {
+    constructor(carts: Record<string, CartModel>) {
+        this._carts = Object.values(carts);
         makeAutoObservable(this);
-        this._carts = carts;
     }
 
-    get carts(): Carts {
+    get carts(): Array<CartModel> {
         return this._carts;
     }
 
-    getCarts(): Array<CartModel> {
-        return Object.values(this._carts);
-    }
-
     get totalAmount(): number {
-        return Object.values(this._carts).reduce((total: number, cart: CartModel): number => {
+        return this._carts.reduce((total: number, cart: CartModel): number => {
             return total + cart.totalItems();
         }, 0);
     }
@@ -38,7 +33,7 @@ class CartsStore {
     getProductAvailability(productId: number): Array<{ cartName: string; amount: number }> {
         const availability = [];
 
-        for (const cart of Object.values(this._carts)) {
+        for (const cart of this._carts) {
             const item: ICartItem | undefined = cart.items.find(item => item.productId === productId);
             if (item) {
                 availability.push({cartName: cart.name, amount: item.amount});

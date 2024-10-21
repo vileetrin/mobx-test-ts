@@ -1,11 +1,11 @@
 import ProductPageController from '../domains/products/ProductPageController.tsx';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import {BrowserRouter as Router, Link, Route, Routes} from 'react-router-dom';
 import CartPage from '../domains/carts/CartPage.tsx';
-import { observer } from 'mobx-react-lite';
+// import { observer } from 'mobx-react-lite';
 import css from "./App.module.css"
 
 
-const App = observer(() => {
+const App = (() => {
     return (
         <Router>
             <nav className={css.navigation}>
@@ -14,8 +14,8 @@ const App = observer(() => {
             </nav>
 
             <Routes>
-                <Route path="/" element={<ProductPageController />} />
-                <Route path="/cart" element={<CartPage />} />
+                <Route path="/" element={<ProductPageController/>}/>
+                <Route path="/cart" element={<CartPage/>}/>
             </Routes>
         </Router>
     );

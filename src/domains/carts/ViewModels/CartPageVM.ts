@@ -2,6 +2,7 @@ import CartsStore from '../store/CartsStore.ts';
 import CartModel from "../Models/CartModel.ts";
 import ProductsStore from "../../products/store/ProductsStore.ts";
 import {IProductEntity} from "../../products/store/Product.ts";
+import {computed, makeObservable} from "mobx";
 
 class CartPageVM {
     private _cartsStore: CartsStore;
@@ -10,45 +11,56 @@ class CartPageVM {
     constructor(cartStore: CartsStore, productsStore: ProductsStore) {
         this._cartsStore = cartStore;
         this._productsStore = productsStore;
+        makeObservable(this, {
+            totalPriceWithDiscount: computed,
+            discount: computed,
+        })
     }
 
-    getCarts(): Array<CartModel> {
-        return this._cartsStore.getCarts()
+    get carts(): Array<CartModel> {
+        return this._cartsStore.carts
     }
 
-    getProductById(productId: number): IProductEntity {
-        return <IProductEntity>this._productsStore.getProductById(productId);
+    getProductById(productId: number): IProductEntity | undefined {
+        return this._productsStore.getProductById(productId);
     }
 
-    cartsPrice(): number {
-        return Object.values(this._cartsStore.getCarts()).reduce((total: number, cart: CartModel): number => {
-            cart.items.map(item => {
-                const product: IProductEntity = this.getProductById(item.productId);
-                return total = total + (product.price * item.amount);
+    get cartsPrice(): number {
+        return Object.values(this.carts).reduce((total: number, cart: CartModel): number => {
+            cart.items.forEach(item => {
+                const product = this.getProductById(item.productId);
+                if (!product) return
+
+                total += (product.price * item.amount);
             })
             return total;
         }, 0);
     }
 
-    discount(): number {
+    get discount(): number {
         return this._cartsStore.discount();
     }
 
-    totalPriceWithDiscount(): number {
-        return this.cartsPrice() - (this.cartsPrice() * this.discount());
+    get totalPriceWithDiscount(): number {
+        const _cartPrice = this.cartsPrice
+        return _cartPrice - (_cartPrice * this.discount);
     }
 
-    handleCheckout(): string {
-        const orderDetails: string[] = Object.values(this._cartsStore.getCarts()).map((cart: CartModel): string => {
-            return cart.items.map(item => {
-                const product: IProductEntity = this.getProductById(item.productId);
-                return `Name: ${product.name}, Price: $${product.price}, Quantity: ${item.amount}`;
-            }).join('\n');
-        })
-        const totalPriceWithDiscount: string = this.totalPriceWithDiscount().toFixed(2);
-
-        return `Order details:\n${orderDetails}\nTotal Price: $${totalPriceWithDiscount}`;
-    }
+    // handleCheckout(): string {
+    //     return untracked(() => {
+    //         const orderDetails: string[] = Object.values(this.carts).map((cart: CartModel): string => {
+    //             const items = untracked(() => cart.items)
+    //             return items.map(item => {
+    //                 const untrackedItem = untracked(() => item);
+    //                 const product: IProductEntity = this.getProductById(untrackedItem.productId);
+    //                 return `Name: ${product.name}, Price: $${product.price}, Quantity: ${untrackedItem.amount}`;
+    //             }).join('\n');
+    //         })
+    //         const totalPriceWithDiscount: string = this.totalPriceWithDiscount.toFixed(2);
+    //
+    //         return `Order details:\n${orderDetails}\nTotal Price: $${totalPriceWithDiscount}`;
+    //     })
+    // }
 }
 
 export {CartPageVM};

@@ -21,7 +21,6 @@ class CartModel {
 
     totalItems(): number {
         return this._items.reduce((sum: number, item: ICartItem): number => sum + item.amount, 0) || 0;
-
     }
 
     addToCart(productId: number): void {
@@ -63,7 +62,6 @@ class CartModel {
         }
         return 0;
     }
-
 }
 
 export default CartModel;

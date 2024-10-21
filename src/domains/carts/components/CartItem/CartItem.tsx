@@ -5,26 +5,33 @@ import CartItemVM from '../../ViewModels/CartItemVM.ts';
 import {ICartItem} from '../../store/CartItem.ts';
 import {useStore} from '../../../../infrastructure/StoreContext.ts';
 import CartModel from '../../Models/CartModel.ts';
+import {untracked} from "mobx";
 
 const CartItem = observer(({cart}: { cart: CartModel }) => {
     const {productsStore} = useStore();
 
     const vm = useMemo(() => new CartItemVM(productsStore, cart), []);
 
+    const cartItems = untracked(() => cart.items)
+    const name = untracked(() => cart.name)
+
     return (
-        <div className={css.container} id={cart.name}>
-            <h1>{cart.name}</h1>
-            {cart.items.length === 0 ? (
+        <div className={css.container} id={name}>
+            <h1>{name}</h1>
+            {cartItems.length === 0 ? (
                 <p>Your cart is empty.</p>
             ) : (
                 <>
                     <ul className={css.list}>
-                        {cart.items.map((product: ICartItem) => {
+                        {cartItems.map((product: ICartItem) => {
+                            const image = untracked(() => vm.getProductById(product.productId).image);
+                            const name = untracked(() => vm.getProductById(product.productId).name);
+                            const price = untracked(() => vm.getProductById(product.productId).price);
                             return (
                                 <li key={product.productId} className={css.item}>
-                                    <img src={vm.getProductById(product.productId).image}
-                                         alt={vm.getProductById(product.productId).name} className={css.img}/>
-                                    <h3>{vm.getProductById(product.productId).name}</h3>
+                                    <img src={image}
+                                         alt={name} className={css.img}/>
+                                    <h3>{name}</h3>
                                     <div className={css.amountContainer}>
                                         <p>Кількість:</p>
                                         <div className={css.btnContainer}>
@@ -39,7 +46,7 @@ const CartItem = observer(({cart}: { cart: CartModel }) => {
                                             </button>
                                         </div>
                                     </div>
-                                    <p>Price: {vm.getProductById(product.productId).price}$</p>
+                                    <p>Price: {price}$</p>
                                     <button onClick={() => vm.removeFromCart(product.productId)}
                                             className={css.button}>
                                         Видалити з кошика
@@ -50,8 +57,8 @@ const CartItem = observer(({cart}: { cart: CartModel }) => {
                     </ul>
                     <div className={css.priceContainer}>
                         <h2>{cart.name} Total Price:
-                            ${vm.totalPriceWithDiscount().toFixed(2)}</h2>
-                        <p>Discount applied: {(vm.discount() * 100).toFixed(0)}%</p>
+                            ${vm.totalPriceWithDiscount.toFixed(2)}</h2>
+                        <p>Discount applied: {(vm.discount * 100).toFixed(0)}%</p>
                         <button className={css.button} onClick={() => alert(vm.handleCheckout())}>
                             Оформити замовлення
                         </button>
