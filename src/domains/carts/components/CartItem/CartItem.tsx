@@ -1,15 +1,15 @@
-import { observer } from 'mobx-react-lite';
+import {observer} from 'mobx-react-lite';
 import css from './CartItem.module.css';
-import { useMemo } from 'react';
+import {useMemo} from 'react';
 import CartItemVM from '../../ViewModels/CartItemVM.ts';
-import {ICartItem} from "../../store/CartItem.ts";
-import {useStore} from "../../../../infrastructure/StoreContext.ts";
-import CartModel from "../../Models/CartModel.ts";
+import {ICartItem} from '../../store/CartItem.ts';
+import {useStore} from '../../../../infrastructure/StoreContext.ts';
+import CartModel from '../../Models/CartModel.ts';
 
-const CartItem = observer(({ cart } : { cart: CartModel }) => {
+const CartItem = observer(({cart}: { cart: CartModel }) => {
     const {productsStore} = useStore();
 
-    const vm = useMemo(() => new CartItemVM(productsStore), []);
+    const vm = useMemo(() => new CartItemVM(productsStore, cart), []);
 
     return (
         <div className={css.container} id={cart.name}>
@@ -19,52 +19,43 @@ const CartItem = observer(({ cart } : { cart: CartModel }) => {
             ) : (
                 <>
                     <ul className={css.list}>
-                        {cart.items.map((cartItem: ICartItem) => {
-                            // --- cartItem
-                            // productId: number
-                            // amount: number;
-                            // --- product
-                            // id: number;
-                            // name: string;
-                            // price: number;
-                            // image: string;
-
-                            const product = vm.getProductById(cartItem.productId)
+                        {cart.items.map((product: ICartItem) => {
                             return (
-                                <li key={cartItem.productId} className={css.item}>
-                                        <img src={product.image} alt={product.name} className={css.img}/>
-                                        <h3>{product.name}</h3>
-                                        <div className={css.amountContainer}>
-                                            <p>Кількість:</p>
-                                            <div className={css.btnContainer}>
-                                                <button onClick={() => cart.decreaseQuantity(cartItem.productId)} className={css.btn}>
-                                                    -
-                                                </button>
-                                                <p>{cartItem.amount}</p>
-                                                <button onClick={() => cart.increaseQuantity(cartItem.productId)} className={css.btn}>
-                                                    +
-                                                </button>
-                                            </div>
+                                <li key={product.productId} className={css.item}>
+                                    <img src={vm.getProductById(product.productId).image}
+                                         alt={vm.getProductById(product.productId).name} className={css.img}/>
+                                    <h3>{vm.getProductById(product.productId).name}</h3>
+                                    <div className={css.amountContainer}>
+                                        <p>Кількість:</p>
+                                        <div className={css.btnContainer}>
+                                            <button onClick={() => vm.decreaseQuantity(product.productId)}
+                                                    className={css.btn}>
+                                                -
+                                            </button>
+                                            <p>{product.amount}</p>
+                                            <button onClick={() => vm.increaseQuantity(product.productId)}
+                                                    className={css.btn}>
+                                                +
+                                            </button>
                                         </div>
-                                        <p>Price: {product.price}$</p>
-                                        <button onClick={() => cart.removeFromCart(cartItem.productId)} className={css.button}>
-                                            Видалити з кошика
-                                        </button>
+                                    </div>
+                                    <p>Price: {vm.getProductById(product.productId).price}$</p>
+                                    <button onClick={() => vm.removeFromCart(product.productId)}
+                                            className={css.button}>
+                                        Видалити з кошика
+                                    </button>
                                 </li>
                             );
-
                         })}
-                        {/*<div className={css.priceContainer}>*/}
-                        {/*    <h2>{cart.name} Total Price:*/}
-                        {/*        ${cartStore.totalPriceWithDiscount(cart.cartId).toFixed(2)}</h2>*/}
-                        {/*    <p>Discount applied: {cartStore.discount(cart.cartId) * 100}%</p>*/}
-                        {/*    <button className={css.button} onClick={() => alert(vm.handleCheckout())}>*/}
-                        {/*        Оформити замовлення*/}
-                        {/*    </button>*/}
-                        {/*</div>*/}
                     </ul>
-
-
+                    <div className={css.priceContainer}>
+                        <h2>{cart.name} Total Price:
+                            ${vm.totalPriceWithDiscount().toFixed(2)}</h2>
+                        <p>Discount applied: {(vm.discount() * 100).toFixed(0)}%</p>
+                        <button className={css.button} onClick={() => alert(vm.handleCheckout())}>
+                            Оформити замовлення
+                        </button>
+                    </div>
                 </>
             )}
         </div>

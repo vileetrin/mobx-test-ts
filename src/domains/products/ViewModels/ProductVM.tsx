@@ -1,28 +1,27 @@
-import CartsStore from "../../carts/store/CartsStore.ts";
-// import { ICartItem } from "../../carts/store/CartItem.ts";
-import CartModel from "../../carts/Models/CartModel.ts";
-import {IProductEntity} from "../store/Product.ts";
+import CartsStore from '../../carts/store/CartsStore.ts';
+import CartModel from '../../carts/Models/CartModel.ts';
+import {IProductEntity} from '../store/Product.ts';
+import {action} from "mobx";
 
 export class ProductVM {
     private _cartsStore: CartsStore;
-    private _productEntity: IProductEntity
+    private _productEntity: IProductEntity;
 
     constructor(productEntity: IProductEntity, cartsStore: CartsStore) {
         this._cartsStore = cartsStore;
-        this._productEntity = productEntity
+        this._productEntity = productEntity;
     }
 
-    // getAvailability(productId: number) {
-    //     return this._cartsStore.getProductAvailability(productId);
-    // }
+    getAvailability = action((productId: number) => {
+        return this._cartsStore.getProductAvailability(productId);
+    })
 
     getCarts(): Array<CartModel> {
-        return this._cartsStore.getCarts()
+        return this._cartsStore.getCarts();
     }
 
-
-    getProduct = (): IProductEntity => {
-        return this._productEntity
-    }
+    getProduct(): IProductEntity {
+        return this._productEntity;
+    };
 }
 
