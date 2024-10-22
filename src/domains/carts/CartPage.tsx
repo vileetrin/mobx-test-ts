@@ -19,9 +19,12 @@ const CartPage = observer(() => {
   return (
     <div className={css.container}>
       <ul className={css.navigation}>
-        {vm.carts.map((cart) => (
-          <CartsNavLink cart={cart} />
-        ))}
+        {vm.carts.map((cart) => {
+          const name = untracked(() => cart.name);
+          return (
+            <CartsNavLink cart={cart} key={name} />
+          );
+        })}
       </ul>
       <ul className={css.list}>
         {vm.carts.map(cart => {

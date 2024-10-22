@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 
 const CartsNavLink = observer(({ cart }: { cart: CartModel }) => {
   return (
-    <li className={css.navlink} key={cart.name}>
+    <li className={css.navlink}>
       <a href={`#${cart.name}`} className={css.link}>{cart.name}</a>
     </li>
   );
