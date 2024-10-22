@@ -1,7 +1,17 @@
 {
   "files": [],
+  "compilerOptions": {
+    "target": "es6",
+    // Устанавливает целевую версию ECMAScript
+    "module": "commonjs",
+    "esModuleInterop": true
+  },
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
   ]
 }
