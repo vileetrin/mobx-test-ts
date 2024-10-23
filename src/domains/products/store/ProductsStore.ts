@@ -1,23 +1,25 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { IProductEntity } from './Product.ts';
 
 class ProductsStore {
-  @observable private _products: IProductEntity[] = [];
+  private _products: IProductEntity[] = [];
 
   constructor() {
+    makeObservable(this, {
+      products: computed,
+      setProducts: action,
+      getProductById: observable,
+    });
   }
 
-  @computed
   get products(): Array<IProductEntity> {
     return this._products;
   }
 
-  @action
   setProducts(products: Array<IProductEntity>) {
     this._products = products;
   }
 
-  @action
   getProductById(id: number) {
     return this.products.find(product => product.id === id);
   }

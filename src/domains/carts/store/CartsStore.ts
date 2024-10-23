@@ -1,27 +1,31 @@
-import { action, computed, observable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 import CartModel from '../Models/CartModel.ts';
 import { ICartItem } from './CartItem.ts';
 
+
 class CartsStore {
-  @observable private _carts: Array<CartModel>;
+  private _carts: Array<CartModel>;
 
   constructor(carts: Record<string, CartModel>) {
     this._carts = Object.values(carts);
+    makeObservable(this, {
+      carts: computed,
+      totalAmount: computed,
+      discount: computed,
+      getProductAvailability: observable,
+    });
   }
 
-  @computed
   get carts(): Array<CartModel> {
     return this._carts;
   }
 
-  @computed
   get totalAmount(): number {
     return this._carts.reduce((total: number, cart: CartModel): number => {
       return total + cart.totalItems;
     }, 0);
   }
 
-  @computed
   get discount(): number {
     const itemCount: number = this.totalAmount;
     if (itemCount >= 3 && itemCount < 10) {
@@ -32,7 +36,6 @@ class CartsStore {
     return 0;
   }
 
-  @action
   getProductAvailability(productId: number): Array<{ cartName: string; amount: number }> {
     const availability = [];
 

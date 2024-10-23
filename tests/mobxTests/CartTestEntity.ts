@@ -1,6 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
 
 class CartTestEntity {
+  // @ts-ignore
   @observable accessor _items = 0;
 
   constructor() {

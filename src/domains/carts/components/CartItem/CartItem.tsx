@@ -21,20 +21,22 @@ const CartItem = observer(({ cart }: { cart: CartModel }) => {
         <>
           <ul className={css.list}>
             {cart.items.map((product: ICartItem) => {
-              const { image, name, price } = untracked(() => {
-                const productDetails = vm.getProductById(product.productId);
-                return {
-                  image: productDetails.image,
-                  name: productDetails.name,
-                  price: productDetails.price,
-                };
-              });
+              // const { image, name, price } = untracked(() => {
+              //   const productDetails = vm.getProductById(product.productId);
+              //   return {
+              //     image: productDetails.image,
+              //     name: productDetails.name,
+              //     price: productDetails.price,
+              //   };
+              // });
               const key = untracked(() => product.productId);
+              const foundProduct = vm.getProductById(product.productId);
+
               return (
                 <li key={key} className={css.item}>
-                  <img src={image}
-                       alt={name} className={css.img} />
-                  <h3>{name}</h3>
+                  <img src={foundProduct.image}
+                       alt={foundProduct.name} className={css.img} />
+                  <h3>{foundProduct.name}</h3>
                   <div className={css.amountContainer}>
                     <p>Кількість:</p>
                     <div className={css.btnContainer}>
@@ -49,7 +51,7 @@ const CartItem = observer(({ cart }: { cart: CartModel }) => {
                       </button>
                     </div>
                   </div>
-                  <p>Price: {price}$</p>
+                  <p>Price: {foundProduct.price}$</p>
                   <button onClick={() => vm.removeFromCart(product.productId)}
                           className={css.button}>
                     Видалити з кошика
@@ -73,3 +75,4 @@ const CartItem = observer(({ cart }: { cart: CartModel }) => {
 });
 
 export default CartItem;
+

@@ -1,4 +1,4 @@
-import { computed, makeObservable, untracked } from 'mobx';
+import { action, computed, makeObservable, observable, untracked } from 'mobx';
 import ProductsStore from '../../products/store/ProductsStore.ts';
 import { IProductEntity } from '../../products/store/Product.ts';
 import CartModel from '../Models/CartModel.ts';
@@ -7,15 +7,21 @@ import { ICartItem } from '../store/CartItem.ts';
 
 export class CartItemVM {
   private _productsStore: ProductsStore;
-  private _cart: CartModel;
+  public _cart: CartModel;
 
   constructor(productsStore: ProductsStore, cart: CartModel) {
-    makeObservable(this, {
-      totalPriceWithDiscount: computed,
-      discount: computed,
-    });
     this._productsStore = productsStore;
     this._cart = cart;
+
+    makeObservable(this, {
+      _cart: observable,
+      totalPriceWithDiscount: computed,
+      discount: computed,
+      decreaseQuantity: action,
+      increaseQuantity: action,
+      removeFromCart: action,
+
+    });
   }
 
   getProductById(productId: number): IProductEntity {

@@ -1,31 +1,34 @@
 import CartsStore from '../../carts/store/CartsStore.ts';
 import CartModel from '../../carts/Models/CartModel.ts';
-import {IProductEntity} from '../store/Product.ts';
+import { IProductEntity } from '../store/Product.ts';
 
-import {computed, makeObservable} from "mobx";
+import { computed, makeObservable } from 'mobx';
 
 export class ProductVM {
-    private _cartsStore: CartsStore;
-    private _productEntity: IProductEntity;
+  private _cartsStore: CartsStore;
+  private _productEntity: IProductEntity;
 
-    constructor(productEntity: IProductEntity, cartsStore: CartsStore) {
-        this._cartsStore = cartsStore;
-        this._productEntity = productEntity;
-        makeObservable(this, {
-            availability: computed,
-        })
-    }
+  constructor(productEntity: IProductEntity, cartsStore: CartsStore) {
+    this._cartsStore = cartsStore;
+    this._productEntity = productEntity;
 
-    get availability(): { cartName: string, amount: number }[] {
-        return this._cartsStore.getProductAvailability(this._productEntity.id);
-    }
+    makeObservable(this, {
+      availability: computed,
+      carts: computed,
+      product: computed,
+    });
+  }
 
-    getCarts(): Array<CartModel> {
-        return this._cartsStore.carts;
-    }
+  get availability(): { cartName: string, amount: number }[] {
+    return this._cartsStore.getProductAvailability(this._productEntity.id);
+  }
 
-    getProduct(): IProductEntity {
-        return this._productEntity;
-    };
+  get carts(): Array<CartModel> {
+    return this._cartsStore.carts;
+  }
+
+  get product(): IProductEntity {
+    return this._productEntity;
+  };
 }
 

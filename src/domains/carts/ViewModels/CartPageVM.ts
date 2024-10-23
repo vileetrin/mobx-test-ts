@@ -11,6 +11,7 @@ class CartPageVM {
   constructor(cartStore: CartsStore, productsStore: ProductsStore) {
     this._cartsStore = cartStore;
     this._productsStore = productsStore;
+
     makeObservable(this, {
       totalPriceWithDiscount: computed,
       discount: computed,

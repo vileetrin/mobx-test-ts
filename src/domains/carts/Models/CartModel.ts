@@ -1,31 +1,37 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { ICartItem } from '../store/CartItem.ts';
 
 class CartModel {
-  @observable private _name: string;
-  @observable private _items: ICartItem[];
+  private _name: string;
+  private _items: ICartItem[];
 
   constructor(items: ICartItem[] = [], name: string) {
     this._items = items;
     this._name = name;
+    makeObservable(this, {
+      name: computed,
+      items: computed,
+      totalItems: computed,
+      discount: computed,
+      addToCart: action,
+      removeFromCart: action,
+      increaseQuantity: action,
+      decreaseQuantity: action,
+    });
   }
 
-  @computed
   get name(): string {
     return this._name;
   }
 
-  @computed
   get items(): ICartItem[] {
     return this._items;
   }
 
-  @computed
   get totalItems(): number {
     return this._items.reduce((sum: number, item: ICartItem): number => sum + item.amount, 0) || 0;
   }
 
-  @action
   addToCart(productId: number): void {
     const existing: ICartItem | undefined = this._items.find(p => p.productId === productId);
     if (existing) {
@@ -35,7 +41,6 @@ class CartModel {
     }
   }
 
-  @action
   removeFromCart(productId: number): void {
     const index: number = this._items.findIndex((p): boolean => p.productId === productId);
     if (index > -1) {
@@ -43,7 +48,6 @@ class CartModel {
     }
   }
 
-  @action
   increaseQuantity(productId: number): void {
     const item: ICartItem | undefined = this._items.find(item => item.productId === productId);
     if (item) {
@@ -51,7 +55,6 @@ class CartModel {
     }
   }
 
-  @action
   decreaseQuantity(productId: number): void {
     const item: ICartItem | undefined = this._items.find(item => item.productId === productId);
     if (item && item.amount > 1) {
@@ -59,7 +62,6 @@ class CartModel {
     }
   }
 
-  @computed
   get discount(): number {
     const itemCount: number = this.totalItems;
     if (itemCount >= 3 && itemCount < 10) {
