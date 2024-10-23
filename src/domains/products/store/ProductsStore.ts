@@ -2,11 +2,12 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { IProductEntity } from './Product.ts';
 
 class ProductsStore {
-  private _products: IProductEntity[] = [];
+  _products: IProductEntity[] = [];
 
   constructor() {
     makeObservable(this, {
       products: computed,
+      _products: observable,
       setProducts: action,
       getProductById: observable,
     });
@@ -16,12 +17,13 @@ class ProductsStore {
     return this._products;
   }
 
-  setProducts(products: Array<IProductEntity>) {
+  setProducts(products: Array<IProductEntity>): void {
     this._products = products;
+
   }
 
-  getProductById(id: number) {
-    return this.products.find(product => product.id === id);
+  getProductById(id: number): IProductEntity | undefined {
+    return this.products.find((product: IProductEntity): boolean => product.id === id);
   }
 }
 

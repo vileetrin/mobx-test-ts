@@ -1,16 +1,16 @@
-import { action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { ICartItem } from '../store/CartItem.ts';
 
 class CartModel {
   private _name: string;
-  private _items: ICartItem[];
+  _items: ICartItem[];
 
   constructor(items: ICartItem[] = [], name: string) {
     this._items = items;
     this._name = name;
     makeObservable(this, {
       name: computed,
-      items: computed,
+      _items: observable,
       totalItems: computed,
       discount: computed,
       addToCart: action,

@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../infrastructure/StoreContext.ts';
 import css from './CartPage.module.css';
-// import Summary from "./components/Summary/Summary.tsx";
+import Summary from './components/Summary/Summary.tsx';
 import { useMemo } from 'react';
 import { CartPageVM } from './ViewModels/CartPageVM.ts';
 import CartItem from './components/CartItem/CartItem.tsx';
 import { untracked } from 'mobx';
 import CartsNavLink from './components/CartsNavLink/CartsNavLink.tsx';
+import CartModel from './Models/CartModel';
 
 const CartPage = observer(() => {
   const { cartsStore, productsStore } = useStore();
@@ -19,16 +20,16 @@ const CartPage = observer(() => {
   return (
     <div className={css.container}>
       <ul className={css.navigation}>
-        {vm.carts.map((cart) => {
-          const name = untracked(() => cart.name);
+        {vm.carts.map((cart: CartModel) => {
+          const name: string = untracked((): string => cart.name);
           return (
             <CartsNavLink cart={cart} key={name} />
           );
         })}
       </ul>
       <ul className={css.list}>
-        {vm.carts.map(cart => {
-          const name = untracked(() => cart.name);
+        {vm.carts.map((cart: CartModel) => {
+          const name: string = untracked((): string => cart.name);
           return (
             <li key={name} className={css.item}>
               <CartItem cart={cart} />
@@ -36,20 +37,7 @@ const CartPage = observer(() => {
           );
         })}
       </ul>
-      <div className={css.summaryContainer}>
-        {/*<Summary summary={vm.getSummary} />*/}
-        <div className={css.priceContainer}>
-          <h2>Total Price: ${vm.totalPriceWithDiscount.toFixed(2)}</h2>
-          <p>Discount applied: {(vm.discount * 100).toFixed(0)}%</p>
-          {/*<button*/}
-          {/*    onClick={() => alert(vm.handleCheckout())}*/}
-          {/*    disabled={vm.carts.every(cart => cart.items.length === 0)}*/}
-          {/*    className={css.button}*/}
-          {/*>*/}
-          {/*    Оформити замовлення*/}
-          {/*</button>*/}
-        </div>
-      </div>
+      <Summary vm={vm} />
     </div>
   );
 });

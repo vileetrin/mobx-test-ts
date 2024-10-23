@@ -1,7 +1,7 @@
 import ProductsStore from '../store/ProductsStore.ts';
 import { ProductsServerRepo } from '../../../infrastructure/repo/ProductsServerRepo.ts';
 import { IProductEntity } from '../store/Product.ts';
-import { action, computed, makeObservable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 
 export class ProductPageVM {
   private _productsStore: ProductsStore;
@@ -9,14 +9,14 @@ export class ProductPageVM {
   constructor(productsStore: ProductsStore) {
     this._productsStore = productsStore;
     makeObservable(this, {
-      init: action,
+      init: observable,
       products: computed,
     });
   }
 
-  public init() {
+  public init(): void {
     ProductsServerRepo.loadProducts()
-      .then(products => {
+      .then((products: IProductEntity[]): void => {
         this._productsStore.setProducts(products);
       });
   }

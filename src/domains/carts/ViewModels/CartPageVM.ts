@@ -3,6 +3,7 @@ import CartModel from '../Models/CartModel.ts';
 import ProductsStore from '../../products/store/ProductsStore.ts';
 import { IProductEntity } from '../../products/store/Product.ts';
 import { computed, makeObservable } from 'mobx';
+import { ICartItem } from '../store/CartItem';
 
 class CartPageVM {
   private _cartsStore: CartsStore;
@@ -28,8 +29,8 @@ class CartPageVM {
 
   get cartsPrice(): number {
     return Object.values(this.carts).reduce((total: number, cart: CartModel): number => {
-      cart.items.forEach(item => {
-        const product = this.getProductById(item.productId);
+      cart.items.forEach((item: ICartItem): void => {
+        const product: IProductEntity | undefined = this.getProductById(item.productId);
         if (!product) return;
 
         total += (product.price * item.amount);
@@ -43,25 +44,22 @@ class CartPageVM {
   }
 
   get totalPriceWithDiscount(): number {
-    const _cartPrice = this.cartsPrice;
+    const _cartPrice: number = this.cartsPrice;
     return _cartPrice - (_cartPrice * this.discount);
   }
 
-  // handleCheckout(): string {
-  //     return untracked(() => {
-  //         const orderDetails: string[] = Object.values(this.carts).map((cart: CartModel): string => {
-  //             const items = untracked(() => cart.items)
-  //             return items.map(item => {
-  //                 const untrackedItem = untracked(() => item);
-  //                 const product: IProductEntity = this.getProductById(untrackedItem.productId);
-  //                 return `Name: ${product.name}, Price: $${product.price}, Quantity: ${untrackedItem.amount}`;
-  //             }).join('\n');
-  //         })
-  //         const totalPriceWithDiscount: string = this.totalPriceWithDiscount.toFixed(2);
-  //
-  //         return `Order details:\n${orderDetails}\nTotal Price: $${totalPriceWithDiscount}`;
-  //     })
-  // }
+  handleCheckout(): string {
+    const orderDetails: string[] = Object.values(this.carts).map((cart: CartModel): string => {
+      return cart.items.map((item: ICartItem): string => {
+        const product = this.getProductById(item.productId);
+        if (!product) return '';
+        return `Name: ${product.name}, Price: $${product.price}, Quantity: ${item.amount}`;
+      }).join('\n');
+    });
+    const totalPriceWithDiscount: string = this.totalPriceWithDiscount.toFixed(2);
+
+    return `Order details:\n${orderDetails}\nTotal Price: $${totalPriceWithDiscount}`;
+  }
 }
 
 export { CartPageVM };

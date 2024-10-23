@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { ProductPageVM } from './ViewModels/ProductPageVM.tsx';
 import { Product } from './components/Product/Product.tsx';
 import { untracked } from 'mobx';
+import { IProductEntity } from './store/Product';
 
 const ProductPageController = observer(() => {
   const { productsStore } = useStore();
@@ -15,15 +16,14 @@ const ProductPageController = observer(() => {
 
   useEffect(() => {
     vm.init();
-    console.log('init');
   }, []);
 
   return (
     <div className={css.container}>
       <h1>Products</h1>
       <ul className={css.list}>
-        {vm.products.map((product) => {
-            const key = untracked(() => product.id);
+        {vm.products.map((product: IProductEntity) => {
+            const key: number = untracked((): number => product.id);
             return (
               <li key={key} className={css.item}>
                 <Product product={product} />
